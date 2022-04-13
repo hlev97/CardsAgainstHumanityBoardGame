@@ -27,15 +27,15 @@ public class Game{
     }
 
     private class Gatekeeper { //checks whether a player can do an action in the current context, and how many players finished.
-        private HashMap<User, String> done = new HashMap(User, string);
-        private numdone = 0;
-        private context;
+        private HashMap<User, String> done = new HashMap();
+        private int numdone = 0;
+        private State context;
 
         public Gatekeeper(State contextState){
             context = contextState;
         }
 
-        public boolean checkAction(player){
+        public boolean checkAction(User player){
             if(state == context && done.get(player) == null){
                 done.put(player, "");
                 numdone++;
@@ -69,7 +69,7 @@ public class Game{
     private void showBlackCard(){
         //todo selection logic
         blackCard = null;
-        state = State.ShowWhiteCard
+        state = State.ShowWhiteCard;
         nextState();
     }
 
@@ -90,11 +90,11 @@ public class Game{
 
     private void initVote(){
         votes.clear();
-        gatekeeper = new Gatekeeper(state)
+        gatekeeper = new Gatekeeper(state);
     }
 
     public void Vote(User player, User target) {
-        if(state != gatekeeper.checkAction(player)) //esetleg exception is
+        if(!gatekeeper.checkAction(player)) //esetleg exception is
             return;
         int number = votes.get(target) == null ? 0 : votes.get(target);
         votes.put(target, number++);
@@ -107,8 +107,8 @@ public class Game{
         if(currentround >= round){
             //todo game end logic
         } else {
-            state = State.ShowBlackCard
-            nextState()
+            state = State.ShowBlackCard;
+            nextState();
         }
     }
 }
