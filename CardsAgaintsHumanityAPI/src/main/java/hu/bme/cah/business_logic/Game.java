@@ -1,29 +1,31 @@
 package hu.bme.cah.business_logic;
 
+import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.Black;
+import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.Set;
+import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.White;
+
 import java.util.HashMap;
 import java.util.ArrayList;
 
-enum State {
-    ShowBlackCard,
-    ShowWhiteCard,
-    Vote
-}
-
-public class Game{
-    private ArrayList<Pack> cardSet;
+public class Game implements GameUserInterface{
+    private ArrayList<Set> cards;
     private State state = State.ShowBlackCard;
     private int round;
-    private int currentround = 0;
+    private int currentround = 1;
     private ArrayList<User> players;
-    private Card blackCard;
-    private HashMap<User, Card[]> playerWhiteCards = new HashMap();
+    private Black blackCard;
+    private HashMap<User, White[]> playerWhiteCards = new HashMap();
     private HashMap<User, Integer> votes = new HashMap();
-    private Gatekeeper gatekeeper;
+    private Gatekeeper gatekeeper = new Gatekeeper(State.Vote);
 
-    public Game (ArrayList<User> players, int rounds, ArrayList<Pack> cards) {
+    public Game (ArrayList<User> players, int rounds, ArrayList<Set> cards) {
         this.players = players;
+        this.cards = cards;
         round = rounds;
-        cardSet = cards;
+
+        for(User player : players){
+            player.NotifyGameBegin(players, rounds);
+        }
     }
 
     private class Gatekeeper { //checks whether a player can do an action in the current context, and how many players finished.
@@ -69,6 +71,7 @@ public class Game{
     private void showBlackCard(){
         //todo selection logic
         blackCard = null;
+
         state = State.ShowWhiteCard;
         nextState();
     }
@@ -76,9 +79,13 @@ public class Game{
     private void initWhiteCard() {
         playerWhiteCards.clear();
         gatekeeper = new Gatekeeper(state);
+
+        for(User player : players){
+            player.NotifyRoundStart(currentround, blackCard);
+        }
     }
 
-    public void ShowWhiteCard(User player, Card[] cards){
+    public void ShowWhiteCard(User player, White[] cards){
         if(!gatekeeper.checkAction(player)) //esetleg dobhat vmi hibat is.
             return;
         playerWhiteCards.put(player, cards);
@@ -91,6 +98,10 @@ public class Game{
     private void initVote(){
         votes.clear();
         gatekeeper = new Gatekeeper(state);
+
+        for(User player : players){
+            player.NotifyVote();
+        }
     }
 
     public void Vote(User player, User target) {
@@ -104,8 +115,13 @@ public class Game{
 
     private void endvote(){
         currentround++;
-        if(currentround >= round){
+        if(currentround > round){
             //todo game end logic
+            User winner = null;
+
+            for(User player : players){
+                player.NotifyGameEnd(winner);
+            }
         } else {
             state = State.ShowBlackCard;
             nextState();

@@ -2,6 +2,8 @@ package hu.bme.cah.business_logic;
 
 import hu.bme.cah.business_logic.User;
 
+import java.util.List;
+
 public class Room {
 
     private List<User> allowedUsers;

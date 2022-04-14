@@ -1,8 +1,11 @@
 package hu.bme.cah.business_logic;
 
+import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.Black;
 import hu.bme.cah.business_logic.Room;
 
-public class User {
+import java.util.ArrayList;
+
+public class User implements UserGameInterface{
 
     private Room currentRoom;
     private boolean isCzar;
@@ -38,4 +41,28 @@ public class User {
     }
 
 
+    @Override
+    public void NotifyGameBegin(ArrayList<User> users, int rounds) {
+
+    }
+
+    @Override
+    public void NotifyRoundStart(int round, Black blackCard) {
+
+    }
+
+    @Override
+    public void NotifyVote() {
+
+    }
+
+    @Override
+    public void NotifyGameEnd(User winner) {
+
+    }
+
+    @Override
+    public void NotifyKicked() {
+
+    }
 }
