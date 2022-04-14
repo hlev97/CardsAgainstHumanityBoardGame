@@ -85,7 +85,7 @@ public class Game implements GameUserInterface{
         }
     }
 
-    public void ShowWhiteCard(User player, White[] cards){
+    public synchronized void ShowWhiteCard(User player, White[] cards){
         if(!gatekeeper.checkAction(player)) //esetleg dobhat vmi hibat is.
             return;
         playerWhiteCards.put(player, cards);
@@ -104,7 +104,7 @@ public class Game implements GameUserInterface{
         }
     }
 
-    public void Vote(User player, User target) {
+    public synchronized void Vote(User player, User target) {
         if(!gatekeeper.checkAction(player)) //esetleg exception is
             return;
         int number = votes.get(target) == null ? 0 : votes.get(target);
