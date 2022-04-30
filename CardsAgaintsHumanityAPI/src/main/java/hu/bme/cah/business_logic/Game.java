@@ -6,19 +6,20 @@ import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.White;
 
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game implements GameUserInterface{
-    private ArrayList<Set> cards;
+    private List<Set> cards;
     private State state = State.ShowBlackCard;
     private int round;
     private int currentround = 1;
-    private ArrayList<User> players;
+    private List<User> players;
     private Black blackCard;
     private HashMap<User, White[]> playerWhiteCards = new HashMap();
     private HashMap<User, Integer> votes = new HashMap();
     private Gatekeeper gatekeeper = new Gatekeeper(State.Vote);
 
-    public Game (ArrayList<User> players, int rounds, ArrayList<Set> cards) {
+    public Game (List<User> players, int rounds, List<Set> cards) {
         this.players = players;
         this.cards = cards;
         round = rounds;
@@ -26,6 +27,7 @@ public class Game implements GameUserInterface{
         for(User player : players){
             player.NotifyGameBegin(players, rounds);
         }
+        nextState();
     }
 
     private class Gatekeeper { //checks whether a player can do an action in the current context, and how many players finished.
@@ -108,7 +110,7 @@ public class Game implements GameUserInterface{
         if(!gatekeeper.checkAction(player)) //esetleg exception is
             return;
         int number = votes.get(target) == null ? 0 : votes.get(target);
-        votes.put(target, number++);
+        votes.put(target, ++number);
         if(gatekeeper.finished())
             endvote();
     }
