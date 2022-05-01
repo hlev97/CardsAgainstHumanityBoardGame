@@ -6,7 +6,8 @@ public interface RoomUserInterface {
     void Join(User player);
     void Leave(User player);
     void Kick(User player, User target);
-    void SelectSet(Set s);
-    void SelectRounds(int rounds);
-    void StartGame();
+    void SelectSet(User player, Set s);
+    void SelectRounds(User player, int rounds);
+    void StartGame(User player);
+    void InviteUser(User player, User target);
 }

@@ -18,10 +18,14 @@ public class Game implements GameUserInterface{
     private HashMap<User, White[]> playerWhiteCards = new HashMap();
     private HashMap<User, Integer> votes = new HashMap();
     private Gatekeeper gatekeeper = new Gatekeeper(State.Vote);
+    private Room room;
 
-    public Game (List<User> players, int rounds, List<Set> cards) {
+    //todo client side cards not checked. users not notified of cards dealt
+
+    public Game (List<User> players, int rounds, List<Set> cards, Room room) {
         this.players = players;
         this.cards = cards;
+        this.room = room;
         round = rounds;
 
         for(User player : players){
@@ -40,6 +44,8 @@ public class Game implements GameUserInterface{
         }
 
         public boolean checkAction(User player){
+            if(!players.contains(player))
+                return false;
             if(state == context && done.get(player) == null){
                 done.put(player, "");
                 numdone++;
@@ -119,11 +125,12 @@ public class Game implements GameUserInterface{
         currentround++;
         if(currentround > round){
             //todo game end logic
-            User winner = null;
+            List<User> scoreboard = null;
 
             for(User player : players){
-                player.NotifyGameEnd(winner);
+                player.NotifyGameEnd(scoreboard);
             }
+            room.GameEnded();
         } else {
             state = State.ShowBlackCard;
             nextState();

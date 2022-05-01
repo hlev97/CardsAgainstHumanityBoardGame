@@ -14,9 +14,9 @@ public class User implements UserGameInterface, UserRoomInterface{
 
     private Game game;
 
-    private List<WhiteCard> ownedWhiteCards;
+   /* private List<WhiteCard> ownedWhiteCards;
     private BlackCard blackCard;
-    private List<List<WhiteCard>> pickedWhiteCards;
+    private List<List<WhiteCard>> pickedWhiteCards;*/
 
     public void setRoom(Room r)
     {
@@ -27,7 +27,7 @@ public class User implements UserGameInterface, UserRoomInterface{
         return  isCzar;
     }
 
-    public boolean setGame(Game g)
+    /*public boolean setGame(Game g)
     {
         game = g;
     }
@@ -40,13 +40,8 @@ public class User implements UserGameInterface, UserRoomInterface{
     public void pickWhiteCard(int a)
     {
         game.pickWhiteCard(ownedWhiteCards[a]);
-    }
+    }*/
 
-
-    @Override
-    public void NotifyGameBegin(ArrayList<User> users, int rounds) {
-
-    }
 
     @Override
     public void NotifyGameBegin(List<User> users, int rounds) {
@@ -64,7 +59,7 @@ public class User implements UserGameInterface, UserRoomInterface{
     }
 
     @Override
-    public void NotifyGameEnd(User winner) {
+    public void NotifyGameEnd(List<User> scoreboard) {
 
     }
 

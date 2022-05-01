@@ -9,6 +9,6 @@ public interface UserGameInterface {
     void NotifyGameBegin(List<User> users, int rounds);
     void NotifyRoundStart(int round, Black blackCard);
     void NotifyVote();
-    void NotifyGameEnd(User winner);
+    void NotifyGameEnd(List<User> scoreboard);
 
 }
