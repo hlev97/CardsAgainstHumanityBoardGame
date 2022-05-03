@@ -7,6 +7,7 @@ import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.White;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Game implements GameUserInterface{
     private List<Set> cards;
@@ -19,8 +20,9 @@ public class Game implements GameUserInterface{
     private HashMap<User, Integer> votes = new HashMap();
     private Gatekeeper gatekeeper = new Gatekeeper(State.Vote);
     private Room room;
+    private Random rand = new Random();
 
-    //todo client side cards not checked. users not notified of cards dealt
+    //todo amount of white cards given to a black card not checked. users not notified of cards dealt - this might not be necessary
 
     public Game (List<User> players, int rounds, List<Set> cards, Room room) {
         this.players = players;
@@ -78,7 +80,10 @@ public class Game implements GameUserInterface{
 
     private void showBlackCard(){
         //todo selection logic
-        blackCard = null;
+        List<Black> blackcards = null;
+
+        blackCard = blackcards.get(rand.nextInt(blackcards.size()));
+        //todo itt removeoljuk?
 
         state = State.ShowWhiteCard;
         nextState();
@@ -96,6 +101,13 @@ public class Game implements GameUserInterface{
     public synchronized void ShowWhiteCard(User player, White[] cards){
         if(!gatekeeper.checkAction(player)) //esetleg dobhat vmi hibat is.
             return;
+        for(White card : cards){
+            if(!player.WhiteCards.contains(card))
+                return;
+        }
+        for(White card : cards){
+            player.WhiteCards.remove(card);
+        }
         playerWhiteCards.put(player, cards);
         if(gatekeeper.finished()) {
             state = State.Vote;
@@ -135,5 +147,9 @@ public class Game implements GameUserInterface{
             state = State.ShowBlackCard;
             nextState();
         }
+    }
+
+    private void DealCards(User player, List<White> cards, int number){
+
     }
 }

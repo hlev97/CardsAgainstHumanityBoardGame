@@ -48,6 +48,9 @@ public class Room implements RoomUserInterface{
     public void Leave(User u) {
         if (connectedUsers.contains(u))
             connectedUsers.remove(u);
+        if(czar == u){
+            czar = connectedUsers.get(0);
+        }
         u.NotifyLeft();
         for(User user : connectedUsers)
             user.NotifyPlayerLeft(u);
@@ -59,6 +62,9 @@ public class Room implements RoomUserInterface{
             return;
         if(connectedUsers.contains(target))
             connectedUsers.remove(target);
+        if(czar == target){
+            czar = connectedUsers.get(0);
+        }
         target.NotifyKicked();
         for(User user : connectedUsers)
             user.NotifyPlayerLeft(user);

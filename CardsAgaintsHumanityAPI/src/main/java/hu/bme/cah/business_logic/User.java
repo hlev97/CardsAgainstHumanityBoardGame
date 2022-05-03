@@ -2,6 +2,7 @@ package hu.bme.cah.business_logic;
 
 import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.Black;
 import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.Set;
+import hu.bme.cah.api.cardsagaintshumanityapi.domain.set.White;
 import hu.bme.cah.business_logic.Room;
 
 import java.util.ArrayList;
@@ -14,8 +15,8 @@ public class User implements UserGameInterface, UserRoomInterface{
 
     private Game game;
 
-   /* private List<WhiteCard> ownedWhiteCards;
-    private BlackCard blackCard;
+    public List<White> WhiteCards;
+    /*private BlackCard blackCard;
     private List<List<WhiteCard>> pickedWhiteCards;*/
 
     public void setRoom(Room r)
