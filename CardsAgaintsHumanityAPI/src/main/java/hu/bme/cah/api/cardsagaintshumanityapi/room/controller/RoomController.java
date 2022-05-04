@@ -2,6 +2,7 @@ package hu.bme.cah.api.cardsagaintshumanityapi.room.controller;
 
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
+import hu.bme.cah.api.cardsagaintshumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.service.RoomService;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
@@ -22,6 +23,9 @@ import java.util.List;
 public class RoomController {
     @Autowired
     RoomService roomService;
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping
     @Secured(User.ROLE_USER)

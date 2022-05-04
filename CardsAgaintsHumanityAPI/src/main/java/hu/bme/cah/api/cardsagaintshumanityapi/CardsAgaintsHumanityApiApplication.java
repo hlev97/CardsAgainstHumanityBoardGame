@@ -6,17 +6,23 @@ import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.service.BlackService;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.service.WhiteService;
+import hu.bme.cah.api.cardsagaintshumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.event.EventListener;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 
 @SpringBootApplication
 public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
@@ -26,6 +32,9 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private EmailService emailService;
 
     public static void main(String[] args) {
         SpringApplication.run(CardsAgaintsHumanityApiApplication.class, args);
@@ -64,6 +73,7 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         User tumay = new User();
         tumay.setUsername("tumay");
         tumay.setPassword(passwordEncoder.encode("tumay"));
+        tumay.setEmail("heizerlevente97@gmail.com");
         tumay.setAccountLocked(false);
         tumay.setEnabled(true);
         tumay.setAccountExpired(false);
@@ -73,6 +83,7 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         User polya = new User();
         polya.setUsername("polya");
         polya.setPassword(passwordEncoder.encode("polya"));
+        polya.setEmail("heizerlevente97@gmail.com");
         polya.setAccountLocked(false);
         polya.setEnabled(true);
         polya.setAccountExpired(false);
@@ -99,4 +110,14 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
 
         repository.saveAll(List.of(hlev, tumay, polya, czar, admin));
     }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void senMail() {
+        emailService.sendEmail(
+                "heizerlevente97@gmail.com",
+                "The server is online...",
+                "Hi Levi,\nThe Server is running..."
+        );
+    }
+
 }

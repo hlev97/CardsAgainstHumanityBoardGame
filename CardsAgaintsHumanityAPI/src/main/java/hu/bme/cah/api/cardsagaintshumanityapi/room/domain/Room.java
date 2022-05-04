@@ -32,7 +32,10 @@ public class Room {
 
     private String czarId;
     private int rounds;
-    private Map<String, Integer> userStates;
+    private boolean privateRoom;
+
+    private Map<String, Integer> userScores;
+    private Map<String, String> userVotes;
 
     @ElementCollection
     @CollectionTable(
@@ -107,12 +110,33 @@ public class Room {
             name = "userStates",
             joinColumns=@JoinColumn(name="roomId")
     )
-    public Map<String, Integer> getUserStates() {
-        return userStates;
+    public Map<String, Integer> getUserScores() {
+        return userScores;
     }
 
-    public void setUserStates(Map<String, Integer> userStates) {
-        this.userStates = userStates;
+    public void setUserScores(Map<String, Integer> userStates) {
+        this.userScores = userStates;
+    }
+
+    @ElementCollection
+    @CollectionTable(
+            name = "userVotes",
+            joinColumns=@JoinColumn(name="roomId")
+    )
+    public Map<String, String> getUserVotes() {
+        return userVotes;
+    }
+
+    public void setUserVotes(Map<String, String> userVotes) {
+        this.userVotes = userVotes;
+    }
+
+    public boolean isPrivateRoom() {
+        return privateRoom;
+    }
+
+    public void setPrivateRoom(boolean privateRoom) {
+        this.privateRoom = privateRoom;
     }
 
     public Room() {

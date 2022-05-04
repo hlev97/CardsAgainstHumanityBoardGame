@@ -4,16 +4,14 @@ import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.repository.BlackRepository;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.repository.WhiteRepository;
+import hu.bme.cah.api.cardsagaintshumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.repository.RoomRepository;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -100,7 +98,8 @@ public class RoomService {
         room.setWhiteIds(whiteIds);
         List<Integer> blackIds = getRandomIds(blackSize, rounds);
         room.setBlackIds(blackIds);
-        room.setUserStates(new HashMap<>());
+        room.setUserScores(new HashMap<>());
+        room.setUserVotes(new HashMap<>());
         return save(room);
     }
 
