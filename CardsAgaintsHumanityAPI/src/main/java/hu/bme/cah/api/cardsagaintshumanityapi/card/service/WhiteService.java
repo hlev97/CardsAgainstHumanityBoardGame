@@ -35,8 +35,4 @@ public class WhiteService {
     public void delete(long whiteId) {
         whiteRepository.deleteById(whiteId);
     }
-
-    public List<White> getRandomOfWhites(int num) {
-        return whiteRepository.getRandomOfWhites(num);
-    }
 }

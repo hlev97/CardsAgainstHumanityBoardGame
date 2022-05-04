@@ -35,8 +35,4 @@ public class BlackService {
     public void delete(long blackId) {
         blackRepository.deleteById(blackId);
     }
-
-    public List<Black> getRandomOfBlacks(int num) {
-        return blackRepository.getRandomOfBlacks(num);
-    }
 }
