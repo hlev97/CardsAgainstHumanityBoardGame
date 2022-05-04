@@ -52,14 +52,32 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        User user = new User();
-        user.setUsername("hlev");
-        user.setPassword(passwordEncoder.encode("hlev"));
-        user.setAccountLocked(false);
-        user.setEnabled(true);
-        user.setAccountExpired(false);
-        user.setCredentialsExpired(false);
-        user.setRoles(List.of("ROLE_USER"));
+        User hlev = new User();
+        hlev.setUsername("hlev");
+        hlev.setPassword(passwordEncoder.encode("hlev"));
+        hlev.setAccountLocked(false);
+        hlev.setEnabled(true);
+        hlev.setAccountExpired(false);
+        hlev.setCredentialsExpired(false);
+        hlev.setRoles(List.of("ROLE_USER"));
+
+        User tumay = new User();
+        tumay.setUsername("tumay");
+        tumay.setPassword(passwordEncoder.encode("tumay"));
+        tumay.setAccountLocked(false);
+        tumay.setEnabled(true);
+        tumay.setAccountExpired(false);
+        tumay.setCredentialsExpired(false);
+        tumay.setRoles(List.of("ROLE_USER"));
+
+        User polya = new User();
+        polya.setUsername("polya");
+        polya.setPassword(passwordEncoder.encode("polya"));
+        polya.setAccountLocked(false);
+        polya.setEnabled(true);
+        polya.setAccountExpired(false);
+        polya.setCredentialsExpired(false);
+        polya.setRoles(List.of("ROLE_USER"));
 
         User czar = new User();
         czar.setUsername("czar");
@@ -79,6 +97,6 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         admin.setCredentialsExpired(false);
         admin.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
 
-        repository.saveAll(List.of(user, czar, admin));
+        repository.saveAll(List.of(hlev, tumay, polya, czar, admin));
     }
 }

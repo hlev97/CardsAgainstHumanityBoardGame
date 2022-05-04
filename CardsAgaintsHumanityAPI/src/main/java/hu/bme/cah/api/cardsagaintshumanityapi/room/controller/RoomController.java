@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,8 +25,10 @@ public class RoomController {
 
     @PostMapping
     @Secured(User.ROLE_USER)
-    public Room create(@RequestBody Room room, Principal principal) {
-        return roomService.createRoom(room, principal);
+    public Room create(@RequestBody Room room) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        roomService.updateUserRoleById(auth.getName(), User.ROLE_CZAR);
+        return roomService.createRoom(room, auth.getName());
     }
 
     @GetMapping("/{roomId}")

@@ -9,10 +9,13 @@ import hu.bme.cah.api.cardsagaintshumanityapi.room.repository.RoomRepository;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static hu.bme.cah.api.cardsagaintshumanityapi.util.Utils.getRandomIds;
@@ -83,9 +86,8 @@ public class RoomService {
         return roomRepository.updateConnectedUsers(roomId, name);
     }
 
-    public Room createRoom(Room room, Principal principal) {
+    public Room createRoom(Room room, String czar) {
         room.setRoomId(null);
-        String czar = principal.getName();
         room.setCzarId(czar);
         room.getAllowedUsers().add(0, czar);
         room.setConnectedUsers(new ArrayList<>());
@@ -98,6 +100,13 @@ public class RoomService {
         room.setWhiteIds(whiteIds);
         List<Integer> blackIds = getRandomIds(blackSize, rounds);
         room.setBlackIds(blackIds);
+        room.setUserStates(new HashMap<>());
         return save(room);
+    }
+
+    public User updateUserRoleById(String name, String roleCzar) {
+        User user = userRepository.findAllById(List.of(name)).get(0);
+        user.getRoles().add(roleCzar);
+        return userRepository.save(user);
     }
 }
