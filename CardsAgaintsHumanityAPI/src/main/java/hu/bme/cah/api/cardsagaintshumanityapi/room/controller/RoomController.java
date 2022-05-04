@@ -32,7 +32,21 @@ public class RoomController {
     public Room create(@RequestBody Room room) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         roomService.updateUserRoleById(auth.getName(), User.ROLE_CZAR);
-        return roomService.createRoom(room, auth.getName());
+        Room result = roomService.createRoom(room, auth.getName());
+        List<String> userIds = roomService.getByRoomId(result.getRoomId()).getAllowedUsers();
+        List<User> users = roomService.findAllByUserIds(userIds);
+        sendEmails(users);
+        return result;
+    }
+
+    private void sendEmails(List<User> recipients) {
+        for (User to : recipients) {
+            emailService.sendEmail(
+                    to.getEmail(),
+                    "test",
+                    "test"
+            );
+        }
     }
 
     @GetMapping("/{roomId}")

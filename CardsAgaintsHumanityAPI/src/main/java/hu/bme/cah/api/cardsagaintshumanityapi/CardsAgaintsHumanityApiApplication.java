@@ -16,19 +16,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.event.EventListener;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Properties;
 
 @SpringBootApplication
+@EnableScheduling
 public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -64,6 +64,7 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         User hlev = new User();
         hlev.setUsername("hlev");
         hlev.setPassword(passwordEncoder.encode("hlev"));
+        hlev.setEmail("heizerlevente97@gmail.com");
         hlev.setAccountLocked(false);
         hlev.setEnabled(true);
         hlev.setAccountExpired(false);
@@ -108,11 +109,11 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         admin.setCredentialsExpired(false);
         admin.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
 
-        repository.saveAll(List.of(hlev, tumay, polya, czar, admin));
+        userRepository.saveAll(List.of(hlev, tumay, polya, czar, admin));
     }
 
     @EventListener(ApplicationReadyEvent.class)
-    public void senMail() {
+    public void sendMail() {
         emailService.sendEmail(
                 "heizerlevente97@gmail.com",
                 "The server is online...",
@@ -120,4 +121,26 @@ public class CardsAgaintsHumanityApiApplication implements CommandLineRunner {
         );
     }
 
+    @Scheduled(fixedRate=24*60*1000)
+    public void sendMailDaily() {
+        emailService.sendEmail(
+                "heizerlevente97@gmail.com",
+                "Come play with your friends",
+                "Hi Levi,\nCome play with your friends..."
+        );
+    }
+
+    @Scheduled(fixedRate=7*24*60*1000)
+    public void sendMailWeekly() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            if (user.getEmail()!=null) {
+                emailService.sendEmail(
+                        user.getEmail(),
+                        "Your weekly stats",
+                        "Hi buddy,"
+                );
+            }
+        }
+    }
 }
