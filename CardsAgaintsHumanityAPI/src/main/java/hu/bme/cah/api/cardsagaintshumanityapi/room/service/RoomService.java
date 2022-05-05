@@ -4,19 +4,19 @@ import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.repository.BlackRepository;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.repository.WhiteRepository;
-import hu.bme.cah.api.cardsagaintshumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.repository.RoomRepository;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.repository.UserRepository;
+import hu.bme.cah.api.cardsagaintshumanityapi.util_di.bean.GenerateIdsBean;
+import hu.bme.cah.api.cardsagaintshumanityapi.util_di.config.AppConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import static hu.bme.cah.api.cardsagaintshumanityapi.util.Utils.getRandomIds;
 
 @Service
 public class RoomService {
@@ -94,10 +94,14 @@ public class RoomService {
         int rounds = room.getRounds();
         int whiteSize = whitesSize();
         int blackSize = blacksSize();
-        List<Integer> whiteIds = getRandomIds(whiteSize, rounds * allowedUsersSize);
-        room.setWhiteIds(whiteIds);
-        List<Integer> blackIds = getRandomIds(blackSize, rounds);
-        room.setBlackIds(blackIds);
+        try (AnnotationConfigApplicationContext ctx =
+                     new AnnotationConfigApplicationContext(AppConfig.class)) {
+            GenerateIdsBean gen = ctx.getBean(GenerateIdsBean.class);
+            List<Integer> whiteIds = gen.randomIds(whiteSize, rounds * allowedUsersSize);
+            room.setWhiteIds(whiteIds);
+            List<Integer> blackIds = gen.randomIds(blackSize, rounds);
+            room.setBlackIds(blackIds);
+        }
         room.setUserScores(new HashMap<>());
         room.setUserVotes(new HashMap<>());
         return save(room);

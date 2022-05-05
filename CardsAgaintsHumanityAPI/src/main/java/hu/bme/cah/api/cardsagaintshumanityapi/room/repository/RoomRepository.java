@@ -1,5 +1,6 @@
 package hu.bme.cah.api.cardsagaintshumanityapi.room.repository;
 
+import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagaintshumanityapi.room.domain.Room;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -30,7 +32,9 @@ public class RoomRepository {
     }
 
     public Room findByRoomId(long roomId) {
-        return em.find(Room.class, roomId);
+        String getByIdQuery = "SELECT r FROM Room r WHERE r.roomId=:roomId";
+        TypedQuery<Room> query = em.createQuery(getByIdQuery, Room.class).setParameter("roomId", roomId);
+        return query.getSingleResult();
     }
 
     @Transactional

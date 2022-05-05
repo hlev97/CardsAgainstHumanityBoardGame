@@ -3,6 +3,8 @@ package hu.bme.cah.api.cardsagaintshumanityapi.card.controller;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagaintshumanityapi.card.service.WhiteService;
 import hu.bme.cah.api.cardsagaintshumanityapi.user.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.http.HttpStatus;

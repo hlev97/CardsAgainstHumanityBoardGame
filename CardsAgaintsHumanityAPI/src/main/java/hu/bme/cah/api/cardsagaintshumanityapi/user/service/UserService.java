@@ -23,17 +23,29 @@ public class UserService {
     }
 
     //TODO: nem mukodik
-    public Optional<User> getByUserId(String userId) {
+    public User getByUserId(String userId) {
         Optional<User> user = userRepository.findById(userId);
-        return Optional.of(userRepository.getById(userId));
+        if (user.isPresent()) {
+            User returnUser = user.get();
+            returnUser.setPassword(null);
+            return returnUser;
+        } else throw new UsernameNotFoundException("Username not found");
     }
 
     public List<User> findAllByUserId(List<String> userIds) {
-        return userRepository.findAllById(userIds);
+        List<User> users = userRepository.findAllById(userIds);
+        for (User user : users) {
+            user.setPassword(null);
+        }
+        return users;
     }
 
     public List<User> findAll() {
-        return userRepository.findAll();
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            user.setPassword(null);
+        }
+        return users;
     }
 
     public void deleteByUserId(String userId) {
@@ -45,25 +57,23 @@ public class UserService {
     }
 
     public User update(String userId, int point, String rank) {
-        if (getByUserId(userId).isPresent()) {
-            User result = getByUserId(userId).get();
-            double userPoint = result.getPoint();
-            result.setPoint(userPoint+point);
-            switch (rank.toLowerCase()) {
-                case "gold":
-                    int gold = result.getGold();
-                    result.setGold(gold + 1);
-                    break;
-                case "silver":
-                    int silver = result.getSilver();
-                    result.setGold(silver + 1);
-                    break;
-                case "bronze":
-                    int bronze = result.getBronze();
-                    result.setGold(bronze + 1);
-                    break;
-            }
-            return userRepository.save(result);
-        } else throw new UsernameNotFoundException(String.format("%s is not listed", userId));
+        User result = getByUserId(userId);
+        double userPoint = result.getPoint();
+        result.setPoint(userPoint+point);
+        switch (rank.toLowerCase()) {
+            case "gold":
+                int gold = result.getGold();
+                result.setGold(gold + 1);
+                break;
+            case "silver":
+                int silver = result.getSilver();
+                result.setGold(silver + 1);
+                break;
+            case "bronze":
+                int bronze = result.getBronze();
+                result.setGold(bronze + 1);
+                break;
+        }
+        return userRepository.save(result);
     }
 }

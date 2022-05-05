@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/users") //Ha Postmannel tesztelsz emiatt lehetnek hibak a /me /hello /czar_hello-nal
 public class UserController {
     @Autowired
     private UserService userService;
@@ -40,13 +41,13 @@ public class UserController {
         return "Hi, " + principal.getName() + ". You are the czar.";
     }
 
-    @PostMapping("/users")
+    @PostMapping
     public User create(@RequestBody User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return this.userService.save(user);
     }
 
-    @GetMapping("/users/{userIds}")
+    @GetMapping("/{userIds}")
     @Secured(User.ROLE_ADMIN)
     public List<User> getUser(@PathVariable List<String> userIds) {
 
@@ -54,24 +55,21 @@ public class UserController {
     }
 
     //TODO: nem mukodik
-    @GetMapping("/users/{userId}")
+    @GetMapping("/{userId}")
     @Secured(User.ROLE_ADMIN)
-    public User getUser(@PathVariable String userId) {
-        Optional<User> user = userService.getByUserId(userId);
-        if (user.isPresent()) {
-            return user.get();
-        } else throw new UsernameNotFoundException(userId);
+    public User getUser(@PathVariable("userId") String userId) {
+        return userService.getByUserId(userId);
     }
 
-    @GetMapping("/users")
+    @GetMapping
     @Secured(User.ROLE_ADMIN)
     public List<User> getUsers() {
         return userService.findAll();
     }
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/{userId}")
     @Secured(User.ROLE_ADMIN)
-    public void delete(@PathVariable String userId) {
+    public void delete(@PathVariable("userId") String userId) {
         userService.deleteByUserId(userId);
     }
 }

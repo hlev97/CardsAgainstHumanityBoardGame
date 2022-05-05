@@ -1,12 +1,14 @@
 package hu.bme.cah.api.cardsagaintshumanityapi.card.repository;
 
 import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.Black;
+import hu.bme.cah.api.cardsagaintshumanityapi.card.domain.White;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
@@ -25,7 +27,9 @@ public class BlackRepository {
     }
 
     public Black findByBlackId(long id) {
-        return em.find(Black.class, id);
+        String getByIdQuery = "SELECT b FROM Black b WHERE b.blackId=:id";
+        TypedQuery<Black> query = em.createQuery(getByIdQuery, Black.class).setParameter("id", id);
+        return query.getSingleResult();
     }
 
     public List<Black> findAll() {

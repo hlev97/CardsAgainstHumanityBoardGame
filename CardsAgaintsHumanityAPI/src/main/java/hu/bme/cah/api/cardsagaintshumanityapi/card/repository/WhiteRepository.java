@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.List;
 
 
@@ -26,7 +27,9 @@ public class WhiteRepository {
     }
 
     public White findByWhiteId(long id) {
-        return em.find(White.class, id);
+        String getByIdQuery = "SELECT w FROM White w WHERE w.whiteId=:id";
+        TypedQuery<White> query = em.createQuery(getByIdQuery, White.class).setParameter("id", id);
+        return query.getSingleResult();
     }
 
     public List<White> findAll() {
