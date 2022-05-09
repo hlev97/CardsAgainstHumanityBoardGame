@@ -20,7 +20,7 @@ Window {
     }
 
     function showMainMenuView(){
-
+        displayedview.source = "qrc:/MainMenuView.qml"
     }
 
     function showGameView(){

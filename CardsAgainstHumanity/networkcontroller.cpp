@@ -16,6 +16,11 @@ void NetworkController::registeruser(QString uname, QString email, QString passw
 
 }
 
+void NetworkController::createRoom(QString name)
+{
+
+}
+
 void NetworkController::joinRoom(QString room)
 {
 
@@ -26,12 +31,17 @@ void NetworkController::leaveRoom()
 
 }
 
-void NetworkController::startGame()
+void NetworkController::startGame(int rounds)
 {
 
 }
 
 void NetworkController::kickPlayer(QString name)
+{
+
+}
+
+void NetworkController::invitePlayer(QString name)
 {
 
 }

@@ -8,7 +8,7 @@ Item {
     width: 320
     height: 180
 
-    signal showLoginView
+    signal showLoginView()
     signal showRegisterView()
     signal showMainMenuView()
     signal showGameView()

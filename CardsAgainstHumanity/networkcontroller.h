@@ -22,13 +22,14 @@ signals:
 public slots:
     void login(QString uname, QString pw);
     void registeruser(QString uname, QString email, QString password);
+    void createRoom(QString name);
     void joinRoom(QString room);
     void leaveRoom();
-    void startGame();
+    void startGame(int rounds);
     void kickPlayer(QString name);
+    void invitePlayer(QString name);
     void getRoomData();
     void getRoomList();
-
 };
 
 #endif // NETWORKCONTROLLER_H

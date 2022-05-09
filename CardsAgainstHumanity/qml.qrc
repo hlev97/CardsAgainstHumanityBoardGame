@@ -3,5 +3,6 @@
         <file>main.qml</file>
         <file>LoginView.qml</file>
         <file>RegisterView.qml</file>
+        <file>MainMenuView.qml</file>
     </qresource>
 </RCC>

@@ -5,12 +5,16 @@ Item {
     width: 360
     height: 220
 
-    signal showLoginView
+    signal showLoginView()
     signal showRegisterView()
     signal showMainMenuView()
     signal showGameView()
 
+    Connections{
+        target: nc
 
+        function onSuccessfullyRegistered(){ showMainMenuView(); }
+    }
 
     Label {
         id: label
@@ -70,6 +74,8 @@ Item {
         y: 160
         width: 100
         text: qsTr("Register")
+
+        onClicked: nc.registeruser(tusername.text, temail.text, tpassword.text);
     }
 
     Button {
