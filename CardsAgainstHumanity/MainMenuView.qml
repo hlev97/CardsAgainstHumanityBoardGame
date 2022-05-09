@@ -18,6 +18,33 @@ Item {
             lroomsmodel.clear();
             list.forEach(item => lroomsmodel.append({name: item}));
         }
+
+        function onRoomDataReceived(players, czarname, rounds) {
+            listplayersmodel.clear();
+            players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname}));
+            lrounds.text = rounds;
+            polling.restart();
+        }
+
+        function onSuccessfullyJoinedRoom(name) {
+            nc.getRoomData();
+            lcurrentroom.text = name;
+        }
+    }
+
+    function clearRoom(){
+        lcurrentroom.text = "";
+        polling.stop();
+        listplayersmodel.clear();//Todo ez nem jo valamiert???
+        lrounds.text = "";
+    }
+
+    Timer{
+        id: polling
+        running: false
+        repeat: false
+        interval: 1000
+        onTriggered: nc.getRoomData();
     }
 
     Pane {
@@ -135,41 +162,27 @@ Item {
             model: ListModel {
                 ListElement {
                     name: "Grey"
-                    colorCode: "grey"
-                }
-
-                ListElement {
-                    name: "Red"
-                    colorCode: "red"
-                }
-
-                ListElement {
-                    name: "Blue"
-                    colorCode: "blue"
-                }
-
-                ListElement {
-                    name: "Green"
-                    colorCode: "green"
+                    isCzar: "false"
                 }
             }
             delegate: Item {
+                id: listplayersmodel
                 x: 5
                 width: 80
                 height: 40
                 Row {
                     id: row2
                     spacing: 10
-                    Rectangle {
-                        width: 40
-                        height: 40
-                        color: colorCode
-                    }
 
                     Text {
                         text: name
                         anchors.verticalCenter: parent.verticalCenter
                         font.bold: true
+
+                        Component.onCompleted: {
+                            if(isCzar === "true")
+                                font.underline = true
+                        }
                     }
                 }
             }
@@ -202,6 +215,7 @@ Item {
             text: qsTr("Leave Room")
             onClicked: {
                 nc.leaveRoom();
+                clearRoom();
             }
         }
 

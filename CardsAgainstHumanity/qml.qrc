@@ -4,5 +4,6 @@
         <file>LoginView.qml</file>
         <file>RegisterView.qml</file>
         <file>MainMenuView.qml</file>
+        <file>cai_icon.png</file>
     </qresource>
 </RCC>

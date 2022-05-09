@@ -14,6 +14,7 @@ public:
 signals:
     void successfullyLoggedIn();
     void successfullyRegistered();
+    void successfullyJoinedRoom(QString name);
     void roomListReceived(QStringList);
     void roomDataReceived(QStringList players, QString czarname, int rounds);
     void connectionLost();

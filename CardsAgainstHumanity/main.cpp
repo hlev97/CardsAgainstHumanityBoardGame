@@ -1,4 +1,5 @@
 #include <QGuiApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
@@ -17,6 +18,6 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("nc", &nc);
 
     engine.load(url);
-
+    app.setWindowIcon(QIcon(":/cai_icon.png"));
     return app.exec();
 }
