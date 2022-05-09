@@ -5,6 +5,13 @@ Item {
     width: 360
     height: 220
 
+    signal showLoginView
+    signal showRegisterView()
+    signal showMainMenuView()
+    signal showGameView()
+
+
+
     Label {
         id: label
         x: 40
@@ -71,6 +78,7 @@ Item {
         y: 160
         width: 100
         text: qsTr("Log in instead")
+        onClicked: showLoginView();
     }
 
 }

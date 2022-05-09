@@ -12,13 +12,22 @@ public:
 
 
 signals:
-    void RoomListReceived(QStringList);
-    void ConnectionLost();
+    void successfullyLoggedIn();
+    void successfullyRegistered();
+    void roomListReceived(QStringList);
+    void roomDataReceived(QStringList players, QString czarname, int rounds);
+    void connectionLost();
 
 
 public slots:
-    void Login(QString uname, QString pw);
-    void GetRoomList();
+    void login(QString uname, QString pw);
+    void registeruser(QString uname, QString email, QString password);
+    void joinRoom(QString room);
+    void leaveRoom();
+    void startGame();
+    void kickPlayer(QString name);
+    void getRoomData();
+    void getRoomList();
 
 };
 

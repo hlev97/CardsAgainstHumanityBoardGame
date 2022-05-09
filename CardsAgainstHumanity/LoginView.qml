@@ -1,9 +1,26 @@
-import QtQuick 2.0
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Controls 6.2
+import QtQuick.Layouts 6.0
+import QtQuick.Controls.Windows 6.0
 
 Item {
     width: 320
     height: 180
+
+    signal showLoginView
+    signal showRegisterView()
+    signal showMainMenuView()
+    signal showGameView()
+
+    Connections{
+        target: nc
+
+        function onSuccessfullyLoggedIn(){
+            showMainMenuView();
+        }
+
+    }
 
     Button {
         id: breg
@@ -12,6 +29,8 @@ Item {
         width: 100
         height: 24
         text: qsTr("Register")
+
+        onClicked: showRegisterView();
     }
 
     Button {
@@ -21,6 +40,8 @@ Item {
         width: 100
         height: 24
         text: qsTr("Login")
+
+        onClicked: nc.login(tusername.text, tpassword.text);
     }
 
     TextField {

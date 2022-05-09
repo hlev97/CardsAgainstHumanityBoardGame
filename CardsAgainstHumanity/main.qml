@@ -4,31 +4,52 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 
-import cah.networkcontroller 1.0
-
 Window {
     width: 640
     height: 320
     visible: true
     title: qsTr("Cards Against Humanity")
+    id: window
 
-    NetworkController{
-        id: nc
+    function showLoginView(){
+        displayedview.source = "qrc:/LoginView.qml"
     }
 
+    function showRegisterView(){
+        displayedview.source = "qrc:/RegisterView.qml"
+    }
 
-    LoginView {
-        id: loginView
-        x: 0
-        y: 0
+    function showMainMenuView(){
 
-        RegisterView {
-            id: registerView
-            x: 282
-            y: 98
+    }
+
+    function showGameView(){
+
+    }
+
+    Loader {
+        id: displayedview
+        onLoaded: {
+            window.height = height;
+            window.width = width;
         }
-
+        source: "qrc:/LoginView.qml"
     }
 
+    Connections {
+        target: displayedview.item
+        function onShowLoginView(){
+            showLoginView();
+        }
+        function onShowRegisterView(){
+            showRegisterView();
+        }
+        function onShowMainMenuView(){
+            showMainMenuView();
+        }
+        function onShowGameView(){
+            showGameView();
+        }
+    }
 
 }

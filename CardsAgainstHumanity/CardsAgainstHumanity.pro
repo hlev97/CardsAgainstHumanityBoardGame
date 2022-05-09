@@ -6,8 +6,7 @@ QT += quick
 
 SOURCES += \
         main.cpp \
-        networkcontroller.cpp \
-        windowcontroller.cpp
+        networkcontroller.cpp
 
 RESOURCES += qml.qrc
 
@@ -23,5 +22,4 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    networkcontroller.h \
-    windowcontroller.h
+    networkcontroller.h
