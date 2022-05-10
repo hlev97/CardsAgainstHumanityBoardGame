@@ -55,3 +55,28 @@ void NetworkController::getRoomList()
 {
 
 }
+
+void NetworkController::sendPickedCards(QStringList cards)
+{
+
+}
+
+void NetworkController::sendVote(QString vote)
+{
+
+}
+
+void NetworkController::updateGameState()
+{
+
+}
+
+void NetworkController::getCards()
+{
+
+}
+
+void NetworkController::getPicks()
+{
+
+}

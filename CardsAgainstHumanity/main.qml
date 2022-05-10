@@ -24,7 +24,7 @@ Window {
     }
 
     function showGameView(){
-
+        displayedview.source = "qrc:/GameView.qml"
     }
 
     Loader {
@@ -33,7 +33,7 @@ Window {
             window.height = height;
             window.width = width;
         }
-        source: "qrc:/LoginView.qml"
+        source: "qrc:/GameView.qml"
     }
 
     Connections {

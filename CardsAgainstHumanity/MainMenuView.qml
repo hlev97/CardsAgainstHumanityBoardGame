@@ -11,6 +11,8 @@ Item {
     signal showMainMenuView()
     signal showGameView()
 
+    //todo: searchbutton functionality, list special controls only for czar.
+
     Connections{
         target: nc
 
@@ -29,6 +31,10 @@ Item {
         function onSuccessfullyJoinedRoom(name) {
             nc.getRoomData();
             lcurrentroom.text = name;
+        }
+
+        function onGameStarted(){
+            showGameView();
         }
     }
 
@@ -183,6 +189,11 @@ Item {
                             if(isCzar === "true")
                                 font.underline = true
                         }
+                    }
+
+                    Button {
+                        text: qsTr("Kick")
+                        onClicked: nc.kickPlayer(name);
                     }
                 }
             }

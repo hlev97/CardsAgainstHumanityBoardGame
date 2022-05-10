@@ -18,6 +18,10 @@ signals:
     void roomListReceived(QStringList);
     void roomDataReceived(QStringList players, QString czarname, int rounds);
     void connectionLost();
+    void gameStarted();
+    void gameState(QString state, int round, int maxrounds);
+    void cardsReceived(QString blackCard, QStringList cards);
+    void picksReceived(QStringList picks, QStringList users);
 
 
 public slots:
@@ -31,6 +35,11 @@ public slots:
     void invitePlayer(QString name);
     void getRoomData();
     void getRoomList();
+    void sendPickedCards(QStringList cards);
+    void sendVote(QString vote);
+    void updateGameState();
+    void getCards();
+    void getPicks();
 };
 
 #endif // NETWORKCONTROLLER_H
