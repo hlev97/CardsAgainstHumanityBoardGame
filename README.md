@@ -5,7 +5,7 @@ Csapatnév: Ariane5
 Csapattagok Neptun kóddal:
 - Heizer Levente (IT9P0Z)
 - Tumay Ádám (Z7MTDT)
-- Mátyás Dániel (BBAGDV)
+- Pólya Mátyás Dániel (BBAGDV)
 
 Bemutató videó URL: 
 (Ugye minden olyan dolog szerepel benne a kiírásnak megfelelően, amire pontot szeretnétek kapni?)
