@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class RoomService {
@@ -84,26 +85,26 @@ public class RoomService {
         return roomRepository.updateConnectedUsers(roomId, name);
     }
 
+    public Room deleteConnectedUsers(long roomId, String name) {
+        return roomRepository.deleteConnectedUsers(roomId, name);
+    }
+
     public Room createRoom(Room room, String czar) {
         room.setRoomId(null);
         room.setCzarId(czar);
-        room.getAllowedUsers().add(0, czar);
+        //room.getAllowedUsers().add(0, czar);
         room.setConnectedUsers(new ArrayList<>());
         room.getConnectedUsers().add(0, czar);
-        int allowedUsersSize = room.getAllowedUsers().size();
-        int rounds = room.getRounds();
-        int whiteSize = whitesSize();
-        int blackSize = blacksSize();
-        try (AnnotationConfigApplicationContext ctx =
-                     new AnnotationConfigApplicationContext(AppConfig.class)) {
-            GenerateIdsBean gen = ctx.getBean(GenerateIdsBean.class);
-            List<Integer> whiteIds = gen.randomIds(whiteSize, rounds * allowedUsersSize);
-            room.setWhiteIds(whiteIds);
-            List<Integer> blackIds = gen.randomIds(blackSize, rounds);
-            room.setBlackIds(blackIds);
-        }
-        room.setUserScores(new HashMap<>());
-        room.setUserVotes(new HashMap<>());
+        //int allowedUsersSize = room.getAllowedUsers().size();
+//        int rounds = room.getRounds();
+//        int whiteSize = whitesSize();
+//        int blackSize = blacksSize();
+//        List<Integer> whiteIds = getRandomIds(whiteSize, rounds * room.getConnectedUsers().size());
+//        room.setWhiteIds(whiteIds);
+//        List<Integer> blackIds = getRandomIds(blackSize, rounds);
+//        room.setBlackIds(blackIds);
+//        room.setUserScores(new HashMap<>());
+//        room.setUserVotes(new HashMap<>());
         return save(room);
     }
 
@@ -112,4 +113,53 @@ public class RoomService {
         user.getRoles().add(roleCzar);
         return userRepository.save(user);
     }
+
+    public Room initGame(long roomId) {
+        Room room = roomRepository.findByRoomId(roomId);
+        int rounds = room.getRounds();
+        int whiteSize = whitesSize();
+        int blackSize = blacksSize();
+
+        try(AnnotationConfigApplicationContext ctx =
+                    new AnnotationConfigApplicationContext(AppConfig.class)) {
+            GenerateIdsBean gen = ctx.getBean(GenerateIdsBean.class);
+            List<Integer> whiteIds = gen.randomIds(whiteSize, rounds * room.getConnectedUsers().size() * 5);
+            room.setWhiteIds(whiteIds);
+            List<Integer> blackIds = gen.randomIds(blackSize, rounds);
+            room.setBlackIds(blackIds);
+        }
+
+        Map<String, Integer> votes = new HashMap<String, Integer>();
+        for (String user: room.getConnectedUsers())
+        {
+            votes.put(user,0);
+        }
+
+        room.setUserScores(votes);
+        room.setUserVotes(new HashMap<>());
+        room.startGame();
+        return roomRepository.initGame(roomId);
+    }
+//    public Room createRoom(Room room, String czar) {
+//        room.setRoomId(null);
+//        room.setCzarId(czar);
+//        room.getAllowedUsers().add(0, czar);
+//        room.setConnectedUsers(new ArrayList<>());
+//        room.getConnectedUsers().add(0, czar);
+//        int allowedUsersSize = room.getAllowedUsers().size();
+//        int rounds = room.getRounds();
+//        int whiteSize = whitesSize();
+//        int blackSize = blacksSize();
+//        try (AnnotationConfigApplicationContext ctx =
+//                     new AnnotationConfigApplicationContext(AppConfig.class)) {
+//            GenerateIdsBean gen = ctx.getBean(GenerateIdsBean.class);
+//            List<Integer> whiteIds = gen.randomIds(whiteSize, rounds * allowedUsersSize);
+//            room.setWhiteIds(whiteIds);
+//            List<Integer> blackIds = gen.randomIds(blackSize, rounds);
+//            room.setBlackIds(blackIds);
+//        }
+//        room.setUserScores(new HashMap<>());
+//        room.setUserVotes(new HashMap<>());
+//        return save(room);
+//    }
 }

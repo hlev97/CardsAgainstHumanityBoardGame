@@ -14,7 +14,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users") //Ha Postmannel tesztelsz emiatt lehetnek hibak a /me /hello /czar_hello-nal
+@RequestMapping("/users")
 @Slf4j
 public class UserController {
     /**

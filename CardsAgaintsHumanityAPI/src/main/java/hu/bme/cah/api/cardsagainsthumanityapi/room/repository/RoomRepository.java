@@ -31,9 +31,7 @@ public class RoomRepository {
     }
 
     public Room findByRoomId(long roomId) {
-        String getByIdQuery = "SELECT r FROM Room r WHERE r.roomId=:roomId";
-        TypedQuery<Room> query = em.createQuery(getByIdQuery, Room.class).setParameter("roomId", roomId);
-        return query.getSingleResult();
+        return em.find(Room.class, roomId);
     }
 
     @Transactional
@@ -53,15 +51,15 @@ public class RoomRepository {
         }
     }
 
-    @Transactional
-    public Room updateUsers(long roomId, Room room) {
-        Room result = findByRoomId(roomId);
-        if (result == null) throw new EntityNotFoundException();
-        else {
-            result.setAllowedUsers(room.getAllowedUsers());
-            return em.merge(result);
-        }
-    }
+//    @Transactional
+//    public Room updateUsers(long roomId, Room room) {
+//        Room result = findByRoomId(roomId);
+//        if (result == null) throw new EntityNotFoundException();
+//        else {
+//            result.setAllowedUsers(room.getAllowedUsers());
+//            return em.merge(result);
+//        }
+//    }
 
     @Transactional
     public Room updateConnectedUsers(long roomId, String name) {
@@ -69,6 +67,25 @@ public class RoomRepository {
         if (result == null) throw new EntityNotFoundException();
         else {
             result.getConnectedUsers().add(name);
+            return em.merge(result);
+        }
+    }
+
+    @Transactional
+    public Room deleteConnectedUsers(long roomId, String name) {
+        Room result = findByRoomId(roomId);
+        if (result == null) throw new EntityNotFoundException();
+        else {
+            result.getConnectedUsers().remove(name);
+            return em.merge(result);
+        }
+    }
+
+    @Transactional
+    public Room initGame(long roomId) {
+        Room result = findByRoomId(roomId);
+        if (result == null) throw new EntityNotFoundException();
+        else {
             return em.merge(result);
         }
     }

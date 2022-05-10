@@ -124,8 +124,6 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
         );
     }
 
-
-
     private static final String RESET_COLOR = "\u001B[0m";
     private static final String INFO_COLOR = "\u001B[32m";
     private static final String ERROR_COLOR = "\u001B[31m";
@@ -163,11 +161,14 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
 
     @Scheduled(fixedRate=24*60*1000)
     public void sendMailDaily() {
-        emailService.sendEmail(
-                "heizerlevente97@gmail.com",
-                "Come play with your friends",
-                "Hi Levi,\nCome play with your friends..."
-        );
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            emailService.sendEmail(
+                    "heizerlevente97@gmail.com",
+                    "Come play with your friends",
+                    "Hi Levi,\nCome play with your friends..."
+            );
+        }
     }
 
     @Scheduled(fixedRate=7*24*60*1000)

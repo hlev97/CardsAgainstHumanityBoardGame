@@ -3,6 +3,7 @@ package hu.bme.cah.api.cardsagainsthumanityapi.room.controller;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagainsthumanityapi.email.service.EmailService;
+import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.GameState;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.service.RoomService;
 import hu.bme.cah.api.cardsagainsthumanityapi.user.domain.User;
@@ -27,15 +28,17 @@ public class RoomController {
     @Autowired
     EmailService emailService;
 
+
+
     @PostMapping
     @Secured(User.ROLE_USER)
     public Room create(@RequestBody Room room) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         roomService.updateUserRoleById(auth.getName(), User.ROLE_CZAR);
         Room result = roomService.createRoom(room, auth.getName());
-        List<String> userIds = roomService.getByRoomId(result.getRoomId()).getAllowedUsers();
-        List<User> users = roomService.findAllByUserIds(userIds);
-        sendEmails(users);
+        //List<String> userIds = roomService.getByRoomId(result.getRoomId()).getAllowedUsers();
+        //List<User> users = roomService.findAllByUserIds(userIds);
+        //sendEmails(users);
         return result;
     }
 
@@ -81,10 +84,50 @@ public class RoomController {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             String name = auth.getName();
             try {
-                if (room.getAllowedUsers().contains(name)) {
+                //if (room.getAllowedUsers().contains(name)) {
+                if (!room.getConnectedUsers().contains(name) && !room.getStartedRoom()) {
                     Room result = roomService.updateConnectedUsers(roomId, name);
                     return ResponseEntity.ok(result);
-                } else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+    }
+
+    @DeleteMapping("/{roomId}/join")
+    @Secured(User.ROLE_USER)
+    public ResponseEntity<Room> leaveRoom(@PathVariable long roomId) {
+        Room room = roomService.getByRoomId(roomId);
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getConnectedUsers().contains(name)) {
+                    Room result = roomService.deleteConnectedUsers(roomId, name);
+                    return ResponseEntity.ok(result);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+    }
+
+    @DeleteMapping("/{roomId}/kick/{playerName}")
+    @Secured(User.ROLE_CZAR)
+    public ResponseEntity<Room> kickPlayer(@PathVariable long roomId, @PathVariable String playerName) {
+        Room room = roomService.getByRoomId(roomId);
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getCzarId().equals(name) && room.getConnectedUsers().contains(playerName)) {
+                    Room result = roomService.deleteConnectedUsers(roomId, playerName);
+                    return ResponseEntity.ok(result);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             } catch (NonTransientDataAccessException e) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             }
@@ -147,15 +190,15 @@ public class RoomController {
         } else return ResponseEntity.ok(black);
     }
 
-    @GetMapping("/{roomId}/allowed_users/list")
-    @Secured({User.ROLE_CZAR, User.ROLE_ADMIN})
-    public List<User> getUsersFromRoom(
-            @PathVariable long roomId
-    ) {
-        Room room = roomService.getByRoomId(roomId);
-        List<String> userIds = room.getAllowedUsers();
-        return roomService.findAllByUserIds(userIds);
-    }
+//    @GetMapping("/{roomId}/allowed_users/list")
+//    @Secured({User.ROLE_CZAR, User.ROLE_ADMIN})
+//    public List<User> getUsersFromRoom(
+//            @PathVariable long roomId
+//    ) {
+//        Room room = roomService.getByRoomId(roomId);
+//        List<String> userIds = room.getAllowedUsers();
+//        return roomService.findAllByUserIds(userIds);
+//    }
 
     @GetMapping("/{roomId}/connected_users/list")
     @Secured({User.ROLE_USER})
@@ -169,8 +212,55 @@ public class RoomController {
 
     @PutMapping("/{roomId}/initGame")
     @Secured(User.ROLE_CZAR)
-    public ResponseEntity<Room> initGame(@PathVariable long roomId) {
+    public ResponseEntity<Room> initGame(@PathVariable long roomId, @RequestBody Room room_body) {
+        Room room = roomService.getByRoomId(roomId);
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getCzarId().equals(name) && !room.getStartedRoom()) {
+                    room.setRounds(room_body.getRounds());
+                    Room result = roomService.initGame(roomId);
+                    return ResponseEntity.ok(result);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+    }
 
-        return ResponseEntity.ok().build();
+    @GetMapping("/{roomId}/gameState")
+    @Secured(User.ROLE_USER)
+    public ResponseEntity<GameState> getGameState(@PathVariable long roomId) {
+        Room room = roomService.getByRoomId(roomId);
+        GameState gs = new GameState();
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getConnectedUsers().contains(name) && room.getStartedRoom()) {
+
+                    List<Integer> whiteIds = room.getUserWhiteIds(name);
+                    List<White> whites = new ArrayList<White>();
+                    for (int i: whiteIds)
+                    {
+                        whites.add(roomService.getByWhiteId(i));
+                    }
+
+                    gs.turnState = room.getTurnState();
+                    gs.currentRound = room.getCurrentRound();
+                    gs.allRound = room.getRounds();
+                    gs.black = roomService.getByBlackId(room.BlackId());
+                    gs.whites = whites;
+                    gs.scores = room.getUserScores();
+                    //gs.chosenCards = room.get
+                    return ResponseEntity.ok(gs);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(gs);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(gs);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(gs);
     }
 }
