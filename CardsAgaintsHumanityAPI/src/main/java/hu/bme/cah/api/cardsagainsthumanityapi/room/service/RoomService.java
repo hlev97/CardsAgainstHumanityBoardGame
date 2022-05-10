@@ -4,6 +4,7 @@ import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.repository.BlackRepository;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.repository.WhiteRepository;
+import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.GameState;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.repository.RoomRepository;
 import hu.bme.cah.api.cardsagainsthumanityapi.user.domain.User;
@@ -92,19 +93,9 @@ public class RoomService {
     public Room createRoom(Room room, String czar) {
         room.setRoomId(null);
         room.setCzarId(czar);
-        //room.getAllowedUsers().add(0, czar);
         room.setConnectedUsers(new ArrayList<>());
         room.getConnectedUsers().add(0, czar);
-        //int allowedUsersSize = room.getAllowedUsers().size();
-//        int rounds = room.getRounds();
-//        int whiteSize = whitesSize();
-//        int blackSize = blacksSize();
-//        List<Integer> whiteIds = getRandomIds(whiteSize, rounds * room.getConnectedUsers().size());
-//        room.setWhiteIds(whiteIds);
-//        List<Integer> blackIds = getRandomIds(blackSize, rounds);
-//        room.setBlackIds(blackIds);
-//        room.setUserScores(new HashMap<>());
-//        room.setUserVotes(new HashMap<>());
+
         return save(room);
     }
 
@@ -140,26 +131,50 @@ public class RoomService {
         room.startGame();
         return roomRepository.initGame(roomId);
     }
-//    public Room createRoom(Room room, String czar) {
-//        room.setRoomId(null);
-//        room.setCzarId(czar);
-//        room.getAllowedUsers().add(0, czar);
-//        room.setConnectedUsers(new ArrayList<>());
-//        room.getConnectedUsers().add(0, czar);
-//        int allowedUsersSize = room.getAllowedUsers().size();
-//        int rounds = room.getRounds();
-//        int whiteSize = whitesSize();
-//        int blackSize = blacksSize();
-//        try (AnnotationConfigApplicationContext ctx =
-//                     new AnnotationConfigApplicationContext(AppConfig.class)) {
-//            GenerateIdsBean gen = ctx.getBean(GenerateIdsBean.class);
-//            List<Integer> whiteIds = gen.randomIds(whiteSize, rounds * allowedUsersSize);
-//            room.setWhiteIds(whiteIds);
-//            List<Integer> blackIds = gen.randomIds(blackSize, rounds);
-//            room.setBlackIds(blackIds);
-//        }
-//        room.setUserScores(new HashMap<>());
-//        room.setUserVotes(new HashMap<>());
-//        return save(room);
-//    }
+
+    public GameState getGameState(Room room, String name)
+    {
+        GameState gs = new GameState();
+        List<Integer> whiteIds = room.getUserWhiteIds(name);
+        List<White> whites = new ArrayList<White>();
+        for (int i: whiteIds)
+        {
+            whites.add(getByWhiteId(i));
+        }
+
+        gs.turnState = room.getTurnState();
+        gs.currentRound = room.getCurrentRound();
+        gs.allRound = room.getRounds();
+        gs.black = getByBlackId(room.BlackId());
+        gs.whites = whites;
+        gs.scores = room.getUserScores();
+
+        Map<String, List<White>> chosenCards = new HashMap<String, List<White>>();
+        Map<String, Integer> chosenIds = room.getUserChosen();
+
+        for (String namesWith_: chosenIds.keySet())
+        {
+            int indexOf_ = namesWith_.lastIndexOf("_");
+            String namesWithout_ = namesWith_.substring(0, indexOf_);
+
+            List<White> list = chosenCards.getOrDefault(namesWithout_, new ArrayList<White>());
+            list.add(getByWhiteId(chosenIds.get(namesWith_)));
+            chosenCards.put(namesWithout_, list);
+        }
+        gs.chosenCards = chosenCards;
+        return gs;
+    }
+
+    public void updateVotes(Room room)
+    {
+        Map<String, Integer> numberOfVotes = room.getUserScores();
+
+        Map<String, String> userVotes = room.getUserVotes();
+        for(String key: userVotes.keySet()){
+            int votes = numberOfVotes.getOrDefault(userVotes.get(key), 0);
+            numberOfVotes.put(userVotes.get(key), votes + 1);
+        }
+
+    }
+
 }

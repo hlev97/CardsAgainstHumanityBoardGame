@@ -9,6 +9,7 @@ import hu.bme.cah.api.cardsagainsthumanityapi.room.service.RoomService;
 import hu.bme.cah.api.cardsagainsthumanityapi.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.NonTransientDataAccessException;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -17,7 +18,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room.*;
 
 @RestController
 @RequestMapping("/api/room")
@@ -36,9 +41,7 @@ public class RoomController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         roomService.updateUserRoleById(auth.getName(), User.ROLE_CZAR);
         Room result = roomService.createRoom(room, auth.getName());
-        //List<String> userIds = roomService.getByRoomId(result.getRoomId()).getAllowedUsers();
-        //List<User> users = roomService.findAllByUserIds(userIds);
-        //sendEmails(users);
+
         return result;
     }
 
@@ -190,15 +193,7 @@ public class RoomController {
         } else return ResponseEntity.ok(black);
     }
 
-//    @GetMapping("/{roomId}/allowed_users/list")
-//    @Secured({User.ROLE_CZAR, User.ROLE_ADMIN})
-//    public List<User> getUsersFromRoom(
-//            @PathVariable long roomId
-//    ) {
-//        Room room = roomService.getByRoomId(roomId);
-//        List<String> userIds = room.getAllowedUsers();
-//        return roomService.findAllByUserIds(userIds);
-//    }
+
 
     @GetMapping("/{roomId}/connected_users/list")
     @Secured({User.ROLE_USER})
@@ -221,6 +216,7 @@ public class RoomController {
                 if (room.getCzarId().equals(name) && !room.getStartedRoom()) {
                     room.setRounds(room_body.getRounds());
                     Room result = roomService.initGame(roomId);
+
                     return ResponseEntity.ok(result);
                 }
                 else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
@@ -241,20 +237,7 @@ public class RoomController {
             try {
                 if (room.getConnectedUsers().contains(name) && room.getStartedRoom()) {
 
-                    List<Integer> whiteIds = room.getUserWhiteIds(name);
-                    List<White> whites = new ArrayList<White>();
-                    for (int i: whiteIds)
-                    {
-                        whites.add(roomService.getByWhiteId(i));
-                    }
-
-                    gs.turnState = room.getTurnState();
-                    gs.currentRound = room.getCurrentRound();
-                    gs.allRound = room.getRounds();
-                    gs.black = roomService.getByBlackId(room.BlackId());
-                    gs.whites = whites;
-                    gs.scores = room.getUserScores();
-                    //gs.chosenCards = room.get
+                    gs = roomService.getGameState(room, name);
                     return ResponseEntity.ok(gs);
                 }
                 else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(gs);
@@ -263,4 +246,97 @@ public class RoomController {
             }
         } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(gs);
     }
+
+    @PutMapping("/{roomId}/chooseCards")
+    @Secured(User.ROLE_USER)
+    public ResponseEntity<Room> chooseCards(@PathVariable long roomId, @RequestBody Map<String, List<Integer>> map) {
+        Room room = roomService.getByRoomId(roomId);
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getConnectedUsers().contains(name) && room.getTurnState().equals(TURN_CHOOSING_CARDS)) {
+                    List<Integer> availableCards = room.getUserWhiteIds(name);
+                    if (!map.containsKey("cards"))
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+                    List<Integer> pickedCards = map.get("cards");
+                    if (pickedCards.size() != roomService.getByBlackId(room.BlackId()).getPick())
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+
+                    for (int cardId: pickedCards)
+                    {
+                        if (!availableCards.contains(cardId))
+                            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+                    }
+
+                    if (room.getUserChosen().containsKey(name + "_1"))
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+
+                    Map<String, Integer> chosen = room.getUserChosen();
+                    for (int i = 0; i < pickedCards.size(); i++)
+                    {
+                        chosen.put(name + "_" + (i + 1), pickedCards.get(i));
+                    }
+
+                    room.setUserChosen(chosen);
+                    if (room.getUserChosen().size() >= roomService.getByBlackId(room.BlackId()).getPick() * room.getConnectedUsers().size())
+                        room.setTurnState(TURN_VOTING);
+                    roomService.save(room);
+                    return ResponseEntity.ok(room);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+    }
+
+
+    @PutMapping("/{roomId}/voteCards")
+    @Secured(User.ROLE_USER)
+    public ResponseEntity<Room> voteCards(@PathVariable long roomId, @RequestBody Map<String, String> map) {
+        Room room = roomService.getByRoomId(roomId);
+        if (room != null) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String name = auth.getName();
+            try {
+                if (room.getConnectedUsers().contains(name) && room.getTurnState().equals(TURN_VOTING)) {
+                    if (!map.containsKey("user"))
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+                    String votedUser = map.get("user");
+                    if (!room.getConnectedUsers().contains(votedUser))
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+
+
+                    Map<String,String> votesMap = room.getUserVotes();
+                    if (votesMap.containsKey(name))
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+                    votesMap.put(name, votedUser);
+                    room.setUserVotes(votesMap);
+                    if (votesMap.size() >= room.getConnectedUsers().size())
+                    {
+                        roomService.updateVotes(room);
+                        int maxRounds = room.getRounds();
+                        int currentRound = room.getCurrentRound();
+                        if (currentRound + 1 > maxRounds)
+                            room.setTurnState(TURN_END_GAME);
+                        else
+                        {
+                            room.setCurrentRound(currentRound + 1);
+                            room.setTurnState(TURN_CHOOSING_CARDS);
+                        }
+                    }
+
+                    roomService.save(room);
+                    return ResponseEntity.ok(room);
+                }
+                else return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            } catch (NonTransientDataAccessException e) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+            }
+        } else  return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+    }
+
+
+
 }

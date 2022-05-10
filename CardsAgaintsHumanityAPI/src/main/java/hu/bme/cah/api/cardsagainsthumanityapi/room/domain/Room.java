@@ -2,9 +2,11 @@ package hu.bme.cah.api.cardsagainsthumanityapi.room.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,8 @@ public class Room {
 
     public static final String TURN_CHOOSING_CARDS = "TURN_CHOOSING_CARDS";
     public static final String TURN_VOTING = "TURN_VOTING";
+    public static final String TURN_END_GAME = "TURN_END_GAME";
+
 
     private Long roomId;
 
@@ -43,6 +47,22 @@ public class Room {
 
     private Map<String, Integer> userScores;
     private Map<String, String> userVotes;
+
+
+    private Map<String, Integer> userChosen;
+
+    @ElementCollection
+    @CollectionTable(
+            name = "userChosen",
+            joinColumns=@JoinColumn(name="roomId")
+    )
+    public Map<String, Integer> getUserChosen() {
+        return userChosen;
+    }
+
+    public void setUserChosen(Map<String, Integer> userChosen) {
+        this.userChosen = userChosen;
+    }
 
     @ElementCollection
     @CollectionTable(
@@ -180,12 +200,10 @@ public class Room {
     }
 
     public void setTurnState(String str) {
+        setUserVotes(new HashMap<String, String>());
+        setUserChosen(new HashMap<String,Integer>());
         turnState = str;
-//        if (str.equals(TURN_CHOOSING_CARDS))
-//            turnState = TURN_CHOOSING_CARDS;
-//        else if (str.equals(TURN_VOTING))
-//            turnState = TURN_VOTING;
-//hibát dob
+
     }
 
     public Room() {
@@ -193,16 +211,13 @@ public class Room {
 
     public void startGame() {
         setStartedRoom(true);
-        currentRound = 0;
-        initTurnState();
+        currentRound = 1;
+        setTurnState(TURN_CHOOSING_CARDS);
 
         //TODO: játék logika
     }
 
-    public void initTurnState(){
-        setTurnState(TURN_CHOOSING_CARDS);
-        currentRound++;
-    }
+
 
     public List<Integer> getUserWhiteIds(String userName)
     {
@@ -214,7 +229,7 @@ public class Room {
         int idx = connectedUsers.indexOf(userName);
         for (int i = 0; i < 5; i++)
         {
-            userWhiteCardIds.add(whiteIds.get(currentRound * numOfUsers * 5 + idx * 5 + i));
+            userWhiteCardIds.add(whiteIds.get((currentRound - 1) * numOfUsers * 5 + idx * 5 + i));
         }
         return userWhiteCardIds;
     }
@@ -222,6 +237,6 @@ public class Room {
     @Transient
     public int BlackId()
     {
-        return blackIds.get(currentRound);
+        return blackIds.get(currentRound - 1);
     }
 }
