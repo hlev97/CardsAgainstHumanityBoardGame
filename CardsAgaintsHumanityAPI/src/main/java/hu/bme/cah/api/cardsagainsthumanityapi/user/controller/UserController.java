@@ -53,6 +53,14 @@ public class UserController {
         log.info("Encode given password...");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         log.info("The password was encoded successfully");
+
+        log.info("Setting user's roles...");
+        user.setRoles(List.of("ROLE_USER"));
+        log.info("User's role successfully set");
+
+        log.info("Enabling user's account...");
+        user.setEnabled(true);
+        log.info("User's account successfully enabled");
         return this.userService.save(user);
     }
 

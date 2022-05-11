@@ -109,8 +109,6 @@ public class RoomService {
 
     public Room createRoom(Room room, String czar) {
         log.trace("In RoomService createRoom(room,czar) method");
-        room.setRoomId(null);
-        log.info("RoomId is initalized");
         room.setCzarId(czar);
         log.info("Czar is set");
         room.setConnectedUsers(new ArrayList<>());

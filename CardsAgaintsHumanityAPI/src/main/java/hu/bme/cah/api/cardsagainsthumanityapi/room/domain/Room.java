@@ -30,7 +30,7 @@ public class Room {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     public String getRoomId() {
         log.trace("In getRoomId getter method");
         return roomId;
@@ -224,8 +224,6 @@ public class Room {
 
     public void setTurnState(String str) {
         log.trace("In setTurnState setter method");
-        setUserVotes(new HashMap<String, String>());
-        setUserChosen(new HashMap<String,Integer>());
         turnState = str;
 
     }
@@ -240,7 +238,6 @@ public class Room {
         currentRound = 1;
         setTurnState(TURN_CHOOSING_CARDS);
 
-        //TODO: játék logika
     }
 
 

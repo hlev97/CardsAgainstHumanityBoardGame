@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,14 +37,21 @@ public class RoomController {
 
     @PostMapping
     @Secured(User.ROLE_USER)
-    public Room create(@RequestBody Room room) {
+    public ResponseEntity<Room> create(@RequestBody Room room) {
         log.trace("In RoomController create(room) method");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        log.info("Checking if name is given and unique");
+        if (!(room.getRoomId() != null && room.getRoomId() != "" && roomService.getByRoomId(room.getRoomId()) == null))
+        {
+            log.info("Name is not given or not unique");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
+        }
+        log.info("Name is given and unique");
         log.info("Update invoker user with ROLE_CZAR authority");
         roomService.updateUserRoleById(auth.getName(), User.ROLE_CZAR);
         Room result = roomService.createRoom(room, auth.getName());
         log.info("Creation was successful");
-        return result;
+        return ResponseEntity.ok(result);
     }
 
     private void sendEmails(List<User> recipients) {
@@ -485,6 +493,11 @@ public class RoomController {
                             room.setCurrentRound(currentRound + 1);
                             log.info("Change game state to choosing");
                             room.setTurnState(TURN_CHOOSING_CARDS);
+
+                            log.info("Reseting user votes");
+                            room.setUserVotes(new HashMap<String, String>());
+                            log.info("Reseting user chosen cards");
+                            room.setUserChosen(new HashMap<String,Integer>());
                         }
                     }
 
