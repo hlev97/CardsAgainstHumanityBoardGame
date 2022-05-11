@@ -2,6 +2,7 @@ package hu.bme.cah.api.cardsagainsthumanityapi.room.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Data
 @AllArgsConstructor
 @Entity
@@ -20,15 +22,17 @@ public class Room {
     public static final String TURN_END_GAME = "TURN_END_GAME";
 
 
-    private Long roomId;
+    private String roomId;
 
-    public void setRoomId(Long roomId) {
+    public void setRoomId(String roomId) {
+        log.trace("In setRoomId setter method");
         this.roomId = roomId;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long getRoomId() {
+    public String getRoomId() {
+        log.trace("In getRoomId getter method");
         return roomId;
     }
 
@@ -57,6 +61,7 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public Map<String, Integer> getUserChosen() {
+        log.trace("In getUserChosen getter method");
         return userChosen;
     }
 
@@ -70,10 +75,12 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public List<Integer> getWhiteIds() {
+        log.trace("In getWhiteIds getter method");
         return whiteIds;
     }
 
     public void setWhiteIds(List<Integer> whiteIds) {
+        log.trace("In setWhiteIds setter method");
         this.whiteIds = whiteIds;
     }
 
@@ -83,10 +90,12 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public List<Integer> getBlackIds() {
+        log.trace("In get blackIds getter method");
         return blackIds;
     }
 
     public void setBlackIds(List<Integer> blackIds) {
+        log.trace("In set blackIds setter method");
         this.blackIds = blackIds;
     }
 
@@ -104,26 +113,32 @@ public class Room {
 //    }
 
     public String getCzarId() {
+        log.trace("In getCzarId getter method");
         return czarId;
     }
 
     public void setCzarId(String czarId) {
+        log.trace("In setCzarId setter method");
         this.czarId = czarId;
     }
 
     public int getRounds() {
+        log.trace("In getRounds getter method");
         return rounds;
     }
 
     public void setRounds(int rounds) {
+        log.trace("In setRounds setter method");
         this.rounds = rounds;
     }
 
     public int getCurrentRound() {
+        log.trace("In getCurrentRounds getter method");
         return currentRound;
     }
 
     public void setCurrentRound(int round) {
+        log.trace("In setCurrentRounds setter method");
         this.currentRound = round;
     }
 
@@ -133,10 +148,12 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public List<String> getConnectedUsers() {
+        log.trace("In getConnectedUsers getter method");
         return connectedUsers;
     }
 
     public void setConnectedUsers(List<String> connectedUsers) {
+        log.trace("In setConnectedUsers setter method");
         this.connectedUsers = connectedUsers;
     }
 
@@ -146,6 +163,7 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public Map<String, Integer> getUserScores() {
+        log.trace("In getUserScores getter method");
         return userScores;
     }
 
@@ -159,10 +177,12 @@ public class Room {
             joinColumns=@JoinColumn(name="roomId")
     )
     public Map<String, String> getUserVotes() {
+        log.trace("In getUserVotes getter method");
         return userVotes;
     }
 
     public void setUserVotes(Map<String, String> userVotes) {
+        log.trace("In setUserVotes setter method");
         this.userVotes = userVotes;
     }
 
@@ -188,18 +208,22 @@ public class Room {
 //    }
 
     public boolean getStartedRoom() {
+        log.trace("In getStartedRoom getter method");
         return startedRoom;
     }
 
     public void setStartedRoom(boolean started) {
+        log.trace("In setStarted setter method");
         this.startedRoom = started;
     }
 
     public String getTurnState() {
+        log.trace("In getTurnState getter method");
         return turnState;
     }
 
     public void setTurnState(String str) {
+        log.trace("In setTurnState setter method");
         setUserVotes(new HashMap<String, String>());
         setUserChosen(new HashMap<String,Integer>());
         turnState = str;
@@ -207,9 +231,11 @@ public class Room {
     }
 
     public Room() {
+        log.trace("In Room constructor");
     }
 
     public void startGame() {
+        log.trace("In startGame method");
         setStartedRoom(true);
         currentRound = 1;
         setTurnState(TURN_CHOOSING_CARDS);
@@ -221,12 +247,17 @@ public class Room {
 
     public List<Integer> getUserWhiteIds(String userName)
     {
+        log.trace("In getUserWhiteIds");
         List<Integer> userWhiteCardIds = new ArrayList<Integer>();
-        if (!connectedUsers.contains(userName))
+        if (!connectedUsers.contains(userName)) {
+            log.trace("In if branch");
+            log.info("The user does not in the list of connected users");
             return userWhiteCardIds;
-
+        }
         int numOfUsers = connectedUsers.size();
         int idx = connectedUsers.indexOf(userName);
+        log.trace("In for cycle");
+        log.info("Add white cards to user");
         for (int i = 0; i < 5; i++)
         {
             userWhiteCardIds.add(whiteIds.get((currentRound - 1) * numOfUsers * 5 + idx * 5 + i));
@@ -237,6 +268,7 @@ public class Room {
     @Transient
     public int BlackId()
     {
+        log.trace("In BlackId method");
         return blackIds.get(currentRound - 1);
     }
 }

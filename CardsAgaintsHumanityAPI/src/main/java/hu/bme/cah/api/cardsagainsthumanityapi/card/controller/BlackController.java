@@ -44,7 +44,7 @@ public class BlackController {
 
     /**
      * Getting a black card with certain id. The invoker must have at least ROLE_USER authority to be able give this request.
-     * @param blackId
+     * @param blackId id
      * @return {@link Black}
      */
     @GetMapping("/{blackId}")
@@ -66,7 +66,7 @@ public class BlackController {
 
     /**
      * Adding a new card to the the database. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param black
+     * @param black black card for creation
      * @return {@link Black}
      */
     @PostMapping
@@ -80,8 +80,8 @@ public class BlackController {
 
     /**
      * Updating a card with given database and save changes. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param blackId
-     * @param black
+     * @param blackId id
+     * @param black black card for update
      * @return {@link ResponseEntity<Black>}
      */
     @PutMapping("/{blackId}")
@@ -122,8 +122,8 @@ public class BlackController {
 
     /**
      * Deleting a card with given id from database. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param blackId
-     * @return {@link ResponseEntity<?>}
+     * @param blackId id
+     * @return {@link ResponseEntity<>}
      */
     @DeleteMapping("/{blackId}")
     @Secured({User.ROLE_ADMIN, User.ROLE_USER})

@@ -23,7 +23,7 @@ public class WhiteRepository {
 
     /**
      * Save {@link White} card to database
-     * @param white
+     * @param white card for saving
      * @return {@link White}
      */
     @Transactional
@@ -36,7 +36,7 @@ public class WhiteRepository {
 
     /**
      * SaveAll given white cards
-     * @param whites
+     * @param whites cards for saving
      */
     @Transactional
     public void saveAll(List<White> whites) {
@@ -50,7 +50,7 @@ public class WhiteRepository {
 
     /**
      * Find white card with given id
-     * @param id
+     * @param id id
      * @return {@link White}
      */
     public White findByWhiteId(long id) {
@@ -75,8 +75,8 @@ public class WhiteRepository {
 
     /**
      * Update a certain white card with given content
-     * @param whiteId
-     * @param white
+     * @param whiteId id
+     * @param white card for updating
      * @return {@link White}
      */
     @Transactional
@@ -104,7 +104,7 @@ public class WhiteRepository {
 
     /**
      * Delete white card with given id
-     * @param id
+     * @param id id
      */
     @Transactional
     public void deleteById(long id) {

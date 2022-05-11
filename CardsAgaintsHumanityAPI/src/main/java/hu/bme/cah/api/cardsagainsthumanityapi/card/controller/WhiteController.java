@@ -54,7 +54,7 @@ public class WhiteController {
 
     /**
      * Getting a {@link White} card with certain id. The invoker must have at least ROLE_USER authority to be able give this request.
-     * @param whiteId
+     * @param whiteId id
      * @return {@link White}
      */
     @GetMapping("/{whiteId}")
@@ -84,7 +84,7 @@ public class WhiteController {
 
     /**
      * Adding a new card to the the database. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param white
+     * @param white white card for add
      * @return {@link White}
      */
     @PostMapping
@@ -100,8 +100,8 @@ public class WhiteController {
 
     /**
      * Updating a card with given database and save changes. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param whiteId
-     * @param white
+     * @param whiteId id
+     * @param white white card for update
      * @return {@link ResponseEntity<White>}
      */
     @PutMapping("/{whiteId}")
@@ -162,8 +162,8 @@ public class WhiteController {
 
     /**
      * Deleting a card with given id from database. The User must have at least ROLE_USER authority to be able to do this request.
-     * @param whiteId
-     * @return {@link ResponseEntity<?>}
+     * @param whiteId id
+     * @return {@link ResponseEntity<>}
      */
     @DeleteMapping("/{whiteId}")
     @Secured({User.ROLE_ADMIN, User.ROLE_USER})

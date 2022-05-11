@@ -24,7 +24,7 @@ public class BlackRepository {
 
     /**
      * Save {@link Black} card to database
-     * @param black
+     * @param black card for saving
      * @return {@link Black}
      */
     @Transactional
@@ -37,7 +37,7 @@ public class BlackRepository {
 
     /**
      * SaveAll given black cards
-     * @param blacks
+     * @param blacks cards for saving
      */
     @Transactional
     public void saveAll(List<Black> blacks) {
@@ -51,7 +51,7 @@ public class BlackRepository {
 
     /**
      * Find black card with given id
-     * @param id
+     * @param id id
      * @return {@link Black}
      */
     public Black findByBlackId(long id) {
@@ -76,8 +76,8 @@ public class BlackRepository {
 
     /**
      * Update a certain black card with given content
-     * @param blackId
-     * @param black
+     * @param blackId id
+     * @param black data for update
      * @return {@link Black}
      */
     @Transactional
@@ -106,7 +106,7 @@ public class BlackRepository {
 
     /**
      * Delete black card with given id
-     * @param id
+     * @param id id
      */
     @Transactional
     public void deleteById(long id) {
