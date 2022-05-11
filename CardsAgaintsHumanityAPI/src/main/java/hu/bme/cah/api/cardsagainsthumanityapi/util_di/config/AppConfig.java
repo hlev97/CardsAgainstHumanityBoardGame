@@ -2,6 +2,7 @@ package hu.bme.cah.api.cardsagainsthumanityapi.util_di.config;
 
 import hu.bme.cah.api.cardsagainsthumanityapi.util_di.generate_ids.GenerateIds;
 import hu.bme.cah.api.cardsagainsthumanityapi.util_di.generate_ids.GenerateRandomIdsSequence;
+import hu.bme.cah.api.cardsagainsthumanityapi.util_di.generate_ids.GetRandomIdsScattered;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,6 @@ public class AppConfig {
      */
     @Bean
     public GenerateIds getMethod() {
-        return new GenerateRandomIdsSequence();
+        return new GetRandomIdsScattered();
     }
 }

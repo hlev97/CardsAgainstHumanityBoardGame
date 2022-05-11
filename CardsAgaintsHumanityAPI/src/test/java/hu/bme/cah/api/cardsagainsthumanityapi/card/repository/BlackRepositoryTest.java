@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
@@ -17,6 +18,11 @@ class BlackRepositoryTest {
 
     @Autowired
     BlackRepository blackRepository;
+
+    @Test
+    void contextLoads() {
+        assertThat(blackRepository).isNotNull();
+    }
 
     @Test
     void save() {

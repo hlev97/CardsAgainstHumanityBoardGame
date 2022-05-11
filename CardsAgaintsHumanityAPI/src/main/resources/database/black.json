@@ -698,12 +698,8 @@
     "text":"Major League Baseball has banned _ for giving players an unfair advantage.",
     "pick":1,
     "pack":"Base"
-  },
-  {
-    "text":"Make a haiku.",
-    "pick":3,
-    "pack":"Base"
-  },
+  }
+,
   {
     "text":"Mate, do not go in that bathroom. There's _ in there.",
     "pick":1,
