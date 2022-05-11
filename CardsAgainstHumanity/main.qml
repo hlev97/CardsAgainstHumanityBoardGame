@@ -33,7 +33,7 @@ Window {
             window.height = height;
             window.width = width;
         }
-        source: "qrc:/GameView.qml"
+        source: "qrc:/MainMenuView.qml"
     }
 
     Connections {

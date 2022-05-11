@@ -11,14 +11,14 @@ Item {
     signal showMainMenuView()
     signal showGameView()
 
-    //todo: searchbutton functionality, list special controls only for czar.
+    //todo: list special controls only for czar.
 
     Connections{
         target: nc
 
         function onRoomListReceived(list) {
-            lroomsmodel.clear();
-            list.forEach(item => lroomsmodel.append({name: item}));
+            lroomsmodel.roomlist = list;
+            lroomsmodel.showlist();
         }
 
         function onRoomDataReceived(players, czarname, rounds) {
@@ -36,13 +36,6 @@ Item {
         function onGameStarted(){
             showGameView();
         }
-    }
-
-    function clearRoom(){
-        lcurrentroom.text = "";
-        polling.stop();
-        listplayersmodel.clear();//Todo ez nem jo valamiert???
-        lrounds.text = "";
     }
 
     Timer{
@@ -67,6 +60,16 @@ Item {
             width: 270
             height: 280
             model: ListModel {
+                property var roomlist: []
+                property string searchstring: ""
+                property var showlist: function(){
+                    clear();
+                    roomlist.forEach(room => {
+                        if(room.includes(searchstring))
+                            append({name: item});
+                    });
+                }
+
                 id: lroomsmodel
             }
             delegate: Item {
@@ -114,6 +117,10 @@ Item {
             y: 20
             width: 50
             text: qsTr("Search")
+            onClicked: {
+                lroomsmodel.searchstring = tfsearch.text;
+                lroomsmodel.showlist();
+            }
         }
 
         Button {
@@ -166,13 +173,13 @@ Item {
             width: 270
             height: 280
             model: ListModel {
+                id: listplayersmodel
                 ListElement {
                     name: "Grey"
                     isCzar: "false"
                 }
             }
             delegate: Item {
-                id: listplayersmodel
                 x: 5
                 width: 80
                 height: 40
@@ -226,7 +233,10 @@ Item {
             text: qsTr("Leave Room")
             onClicked: {
                 nc.leaveRoom();
-                clearRoom();
+                lcurrentroom.text = "";
+                polling.stop();
+                listplayersmodel.clear();
+                lrounds.text = "";
             }
         }
 
@@ -307,6 +317,7 @@ Item {
             onClicked: nc.startGame(parseInt(lrounds.text));
         }
     }
+
 }
 
 /*##^##
