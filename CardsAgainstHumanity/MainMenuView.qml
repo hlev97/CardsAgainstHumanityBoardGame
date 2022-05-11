@@ -66,7 +66,7 @@ Item {
                     clear();
                     roomlist.forEach(room => {
                         if(room.includes(searchstring))
-                            append({name: item});
+                            append({name: room});
                     });
                 }
 
