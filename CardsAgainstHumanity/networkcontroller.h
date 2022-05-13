@@ -14,6 +14,7 @@ class NetworkController : public QObject
 public:
     explicit NetworkController(QObject *parent = nullptr);
 
+
 private:
     QNetworkAccessManager* manager;
     QString loggedInUsername;
@@ -40,14 +41,14 @@ public slots:
     void joinRoom(QString room);//
     void leaveRoom();//
     void startGame(int rounds);//
-    void kickPlayer(QString name);//???
-    void invitePlayer(QString name);
-    void getRoomData();
+    void kickPlayer(QString name);//
+    void invitePlayer(QString name);////ez mi
+    void getRoomData();//
     void getRoomList();//
     void sendPickedCards(QStringList cards);
     void sendVote(QString vote);
-    void updateGameState();
-    void getCards();
+    void updateGameState();//
+    void getCards();//
     void getPicks();
 
     void handleLoginResult(QNetworkReply *reply);
@@ -55,10 +56,13 @@ public slots:
     void handleRoomListResult(QNetworkReply *reply);
     void handleRoomCreateResult(QNetworkReply *reply);
     void handleRoomJoinResult(QNetworkReply *reply);
-    void handleRoomLeaveResult(QNetworkReply *reply);
     void handleGameStartResult(QNetworkReply *reply);
     void handlePlayerKickResult(QNetworkReply *reply);
     void handleRoomDataResult(QNetworkReply *reply);
+    void handleCardsResult(QNetworkReply *reply);
+    void handleGamestateResult(QNetworkReply *reply);
+
+
 
 
 };
