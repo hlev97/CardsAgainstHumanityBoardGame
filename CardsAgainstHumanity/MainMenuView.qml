@@ -22,15 +22,27 @@ Item {
         }
 
         property bool beenczar: false
-        function onRoomDataReceived(players, czarname, rounds, playername, isplayerczar) {
+        function onRoomDataReceived(players, czarname, rounds, isplayerczar) {
             listplayersmodel.clear();
-            players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar === "true"}));
-            if(isplayerczar === "true" && !beenczar){
+            players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar}));
+
+            if(isplayerczar && !beenczar){
+                label6.visible = true
                 beenczar = true;
+                lrounds.visible = true;
                 lrounds.text = 5;
                 bplus.visible = true;
-                bmninus.visible = true;
+                bminus.visible = true;
                 bstartgame.visible = true;
+            }
+            if(!isplayerczar){
+                label6.visible = false
+                beenczar = false;
+                lrounds.visible = false;
+                lrounds.text = 5;
+                bplus.visible = false;
+                bminus.visible = false;
+                bstartgame.visible = false;
             }
 
             polling.restart();
@@ -185,6 +197,7 @@ Item {
                 ListElement {
                     name: "Grey"
                     isCzar: false
+                    isplayerczar: false
                 }
             }
             delegate: Item {
@@ -207,9 +220,15 @@ Item {
                     }
 
                     Button {
-                        visible: isplayerczar
                         text: qsTr("Kick")
                         onClicked: nc.kickPlayer(name);
+
+                        Component.onCompleted: {
+                            if(isplayerczar === true)
+                                visible = true;
+                            else
+                                visible = false;
+                        }
                     }
                 }
             }

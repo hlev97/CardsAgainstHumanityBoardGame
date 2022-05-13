@@ -284,7 +284,8 @@ void NetworkController::handleRoomDataResult(QNetworkReply *reply)
     czarName = json["czarId"].toString();
     rounds = json["rounds"].toInt();
     //qDebug() << "registered and logged in as: " << loggedInUsername;
-    emit roomDataReceived(playerList, czarName, rounds, isplayerczar);
+    bool isCzar = QString::compare(czarName, loggedInUsername) == 0;
+    emit roomDataReceived(playerList, czarName, rounds, isCzar);
 }
 
 void NetworkController::getRoomList()
@@ -322,9 +323,27 @@ void NetworkController::handleRoomListResult(QNetworkReply *reply)
 
 }
 
-void NetworkController::sendPickedCards(QStringList cards)
+void NetworkController::sendPickedCards(QList<int> cards)
 {
+    QNetworkRequest request(QUrl("http://localhost:8080/api/room"));
+    QString concatenated = loggedInUsername + ":" + loggedInPassword;
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
 
+    request.setRawHeader("Authorization", headerData.toLocal8Bit());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+    QJsonArray jsonArray;
+
+    for (auto v : cards) {
+        jsonArray.append(v);
+    }
+
+    QJsonObject obj;
+    obj["cards"] = jsonArray;
+    QJsonDocument doc(obj);
+    QByteArray body = doc.toJson();
+    manager->put(request, body);
 }
 
 void NetworkController::sendVote(QString vote)
@@ -383,6 +402,7 @@ void NetworkController::handleCardsResult(QNetworkReply *reply)
     QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)), 0, 0);
     QString blackCard;
     QList<QString> whiteCards;
+    QList<int> cardIds;
     int numberOfPicks;
     if (reply->error()) {
         qDebug() << reply->errorString();
@@ -402,11 +422,12 @@ void NetworkController::handleCardsResult(QNetworkReply *reply)
             QJsonObject element = v.toObject();
 
             whiteCards.append(element["text"].toString());
+            cardIds.append(element["whiteId"].toInt());
         }
 
 
     //qDebug() << "registered and logged in as: " << loggedInUsername;
-    emit cardsReceived(blackCard, whiteCards, numberOfPicks);
+    emit cardsReceived(blackCard, whiteCards, cardIds, numberOfPicks);
 }
 
 void NetworkController::getPicks()

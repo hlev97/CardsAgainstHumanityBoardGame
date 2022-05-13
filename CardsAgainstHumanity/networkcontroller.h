@@ -30,7 +30,7 @@ signals:
     void connectionLost();
     void gameStarted();
     void gameState(QString state, int round, int maxrounds);
-    void cardsReceived(QString blackCard, QStringList cards, int picks);
+    void cardsReceived(QString blackCard, QStringList cards, QList<int> cardIds, int picks);
     void picksReceived(QStringList picks, QStringList users, int numberOfPicks);
 
 
@@ -45,7 +45,7 @@ public slots:
     void invitePlayer(QString name);////ez mi
     void getRoomData();//
     void getRoomList();//
-    void sendPickedCards(QStringList cards);
+    void sendPickedCards(QList<int> cards);
     void sendVote(QString vote);
     void updateGameState();//
     void getCards();//
