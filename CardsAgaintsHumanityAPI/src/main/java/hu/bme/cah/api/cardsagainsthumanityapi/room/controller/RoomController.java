@@ -110,9 +110,14 @@ public class RoomController {
             try {
                 log.trace("In try block: add user");
                 //if (room.getAllowedUsers().contains(name)) {
-                log.info("Check if user is not already in room and the room is not started yet");
-                if (!room.getConnectedUsers().contains(name) && !room.getStartedRoom()) {
-                    log.trace("In if block: user not in room and a game has not started yet");
+                log.info("Check if user is already in room");
+                if (room.getConnectedUsers().contains(name)){
+                    log.trace("In if block: user is already in room");
+                    return ResponseEntity.ok(room);
+                }
+                log.info("Check if the room is not started yet");
+                if (!room.getStartedRoom()) {
+                    log.trace("In if block: is not in room and a game has not started yet");
                     log.info("User is added to connected users list");
                     Room result = roomService.updateConnectedUsers(roomId, name);
                     log.info("Connected users list is updated successfully");
