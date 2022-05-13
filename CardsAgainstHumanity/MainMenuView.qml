@@ -24,7 +24,7 @@ Item {
         function onRoomDataReceived(players, czarname, rounds) {
             listplayersmodel.clear();
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname}));
-            //lrounds.text = rounds;
+            lrounds.text = rounds;
             polling.restart();
         }
 

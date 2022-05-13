@@ -42,11 +42,12 @@ Item {
             currentstate = state
         }
 
-        function onCardsReceived(blackcard, cards, numpicks){
-            lplayerwhitecards.clear();
-            cards.forEach(card => lplayerwhitecards.append({name : card}));
+        function onCardsReceived(blackcard, cards, cardids, numpicks){
             lblackcard.text = blackcard;
             lwcards.picknum = numpicks;
+            lwcards.cards = cards;
+            lwcards.cardids = cardids;
+            lwcards.showcards();
             lpicknum.text = "Pick " + numpicks;
         }
 
@@ -102,7 +103,17 @@ Item {
                 flickableDirection: Flickable.HorizontalFlick
                 boundsBehavior: Flickable.StopAtBounds
                 property var picks: [];
+                property var cardids: [];
+                property var cards: [];
                 property int picknum : 2;
+                property var showcards : function (){
+                    picks.clear();
+                    lplayerwhitecards.clear();
+                    cards.forEach(card => {
+                        lplayerwhitecards.append({name : card});
+                   });
+                }
+
                 delegate: Item {
                     width: 110
                     height: 100
@@ -131,9 +142,9 @@ Item {
                             height: 20
                             onClicked: {
                                 if(checkState === Qt.Checked)
-                                    lwcards.picks.push(name);
+                                    lwcards.picks.push(parseInt(lwcards.cardids[lwcards.cards.indexOf(name)]));
                                 else{
-                                    lwcards.picks.splice(lwcards.picks.indexOf(name), 1);
+                                    lwcards.picks.splice(lwcards.cardids[lwcards.cards.indexOf(name)], 1);
                                 }
 
                                 if(lwcards.picks.length !== lwcards.picknum){
