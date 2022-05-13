@@ -10,6 +10,7 @@ import hu.bme.cah.api.cardsagainsthumanityapi.user.controller.UserController;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Ensures that {@link UserController} can access {@link User} through {@link UserRepository}
@@ -28,11 +29,18 @@ public class UserService {
      * @param user user
      * @return {@link User}
      */
-    public User save(User user) {
+    public User save(User user) throws Exception {
         log.trace("save(user) method is accessed");
-        User savedUser = userRepository.save(user);
-        log.info("Saving the user was successful");
-        return savedUser;
+        if (emailValidator(user.getEmail())) {
+            log.trace("In if block: the given email is valid");
+            User savedUser = userRepository.save(user);
+            log.info("Saving the user was successful");
+            return savedUser;
+        } else {
+            log.trace("In else block");
+            log.error("The given email is invalid");
+            throw new Exception("The given email is not valid");
+        }
     }
 
     /**
@@ -146,9 +154,20 @@ public class UserService {
                 int bronze = result.getBronze();
                 result.setBronze(bronze + 1);
                 break;
+            default:
+                break;
         }
         User updatedUser = userRepository.save(result);
         log.info("User with given id was updated successfully after finishing the game");
         return updatedUser;
+    }
+
+    private static boolean emailValidator(String emailAddress) {
+        log.trace("In emailValidator(emailAddress)");
+        String pattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(pattern)
+                .matcher(emailAddress)
+                .matches();
     }
 }

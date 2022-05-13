@@ -36,7 +36,7 @@ class UserServiceTest {
     }
 
     @Test
-    void save() {
+    void save() throws Exception {
         User user = new User();
         user.setUsername("test");
         int beforeSave = userService.findAll().size();

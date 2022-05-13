@@ -47,21 +47,28 @@ public class UserController {
      * @return {@link User}
      */
     @PostMapping
-    public User create(@RequestBody User user) {
+    public User create(@RequestBody User user) throws Exception {
         log.trace("create(user) method is accessed");
-        log.info("Adding new user...");
-        log.info("Encode given password...");
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        log.info("The password was encoded successfully");
+        try {
+            log.trace("In try block");
+            log.info("Adding new user...");
+            log.info("Encode given password...");
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            log.info("The password was encoded successfully");
 
-        log.info("Setting user's roles...");
-        user.setRoles(List.of("ROLE_USER"));
-        log.info("User's role successfully set");
+            log.info("Setting user's roles...");
+            user.setRoles(List.of("ROLE_USER"));
+            log.info("User's role successfully set");
 
-        log.info("Enabling user's account...");
-        user.setEnabled(true);
-        log.info("User's account successfully enabled");
-        return this.userService.save(user);
+            log.info("Enabling user's account...");
+            user.setEnabled(true);
+            log.info("User's account successfully enabled");
+            return this.userService.save(user);
+        } catch (Exception e) {
+            log.trace("In catch block");
+            log.error("The given email is invalid");
+            throw new Exception("Invalid email");
+        }
     }
 
     /**
