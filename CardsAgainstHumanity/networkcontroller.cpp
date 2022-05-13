@@ -382,7 +382,7 @@ void NetworkController::handleGamestateResult(QNetworkReply *reply)
 //    qDebug() << maxrounds;
 
 
-    emit gameState(state, round, maxrounds, users, scores);
+    //emit gameState(state, round, maxrounds);
 }
 
 void NetworkController::getCards()

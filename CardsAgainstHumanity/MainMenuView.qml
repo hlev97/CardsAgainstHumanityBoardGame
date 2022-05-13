@@ -71,47 +71,6 @@ Item {
         width: 320
         height: 480
 
-        ListView {
-            id: lrooms
-            x: 20
-            y: 100
-            width: 270
-            height: 280
-            model: ListModel {
-                property var roomlist: []
-                property string searchstring: ""
-                property var showlist: function(){
-                    clear();
-                    roomlist.forEach(room => {
-                        if(room.includes(searchstring))
-                            append({name: room});
-                    });
-                }
-
-                id: lroomsmodel
-            }
-            delegate: Item {
-                x: 5
-                width: 80
-                height: 40
-                Row {
-                    id: row1
-                    spacing: 10
-
-                    Text {
-                        text: name
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.bold: true
-                    }
-
-                    Button {
-                        text : qsTr("Join room")
-                        onClicked: nc.joinRoom(name);
-                    }
-                }
-            }
-        }
-
         TextField {
             id: tfsearch
             x: 20
@@ -124,7 +83,7 @@ Item {
         TextField {
             id: tfcreate
             x: 90
-            y: 400
+            y: 410
             height: 24
             placeholderText: qsTr("Room name")
         }
@@ -153,7 +112,7 @@ Item {
         Button {
             id: bcreate
             x: 220
-            y: 400
+            y: 410
             text: qsTr("Create Room")
             onClicked: nc.createRoom(tfcreate.text);
         }
@@ -170,10 +129,67 @@ Item {
         Label {
             id: label1
             x: 20
-            y: 400
+            y: 410
             width: 70
             height: 24
             text: qsTr("Room name:")
+        }
+
+        ScrollView {
+            x: 20
+            y: 90
+            width: 270
+            height: 310
+            id: scrollView
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            ListView {
+                clip: true
+                id: lrooms
+                x: 0
+                y: 0
+                width: 270
+                height: 280
+                model: ListModel {
+                    property var roomlist: []
+                    property string searchstring: ""
+                    property var showlist: function(){
+                        clear();
+                        roomlist.forEach(room => {
+                                             if(room.includes(searchstring))
+                                             append({name: room});
+                                         });
+                    }
+
+                    id: lroomsmodel
+                    ListElement {
+                        name: "Asd"
+                    }
+                    ListElement {
+                        name: "Grey"
+                    }
+                }
+                delegate: Item {
+                    x: 5
+                    width: 80
+                    height: 40
+                    Row {
+                        id: row1
+                        spacing: 10
+
+                        Text {
+                            text: name
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.bold: true
+                        }
+
+                        Button {
+                            text : qsTr("Join room")
+                            onClicked: nc.joinRoom(name);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -184,48 +200,77 @@ Item {
         width: 320
         height: 480
 
-        ListView {
-            id: listView1
+        ScrollView {
             x: 20
-            y: 100
+            y: 90
             width: 270
             height: 280
-            model: ListModel {
-                id: listplayersmodel
-                ListElement {
-                    name: "Grey"
-                    isCzar: false
-                    isplayerczar: false
-                }
-            }
-            delegate: Item {
-                x: 5
-                width: 80
-                height: 40
-                Row {
-                    id: row2
-                    spacing: 10
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
 
-                    Text {
-                        text: name
-                        anchors.verticalCenter: parent.verticalCenter
-                        font.bold: true
-
-                        Component.onCompleted: {
-                            if(isCzar === true)
-                                font.underline = true
-                        }
+            ListView {
+                clip: true
+                id: listView1
+                x: 0
+                y: 0
+                width: 270
+                height: 280
+                model: ListModel {
+                    id: listplayersmodel
+                    ListElement {
+                        name: "Grey"
+                        isCzar: false
+                        isplayerczar: false
                     }
+                    ListElement {
+                        name: "Grey"
+                        isCzar: false
+                        isplayerczar: false
+                    }
+                    ListElement {
+                        name: "Grey"
+                        isCzar: false
+                        isplayerczar: false
+                    }
+                    ListElement {
+                        name: "Grey"
+                        isCzar: false
+                        isplayerczar: false
+                    }
+                    ListElement {
+                        name: "Grey"
+                        isCzar: false
+                        isplayerczar: false
+                    }
+                }
+                delegate: Item {
+                    x: 5
+                    width: 80
+                    height: 40
+                    Row {
+                        id: row2
+                        spacing: 10
 
-                    Button {
-                        text: qsTr("Kick")
-                        onClicked: nc.kickPlayer(name);
+                        Text {
+                            text: name
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.bold: true
 
-                        Component.onCompleted: {
-                            if(isplayerczar === true)
-                                visible = true;
-                            else
-                                visible = false;
+                            Component.onCompleted: {
+                                if(isCzar === true)
+                                    font.underline = true
+                            }
+                        }
+
+                        Button {
+                            text: qsTr("Kick")
+                            onClicked: nc.kickPlayer(name);
+
+                            Component.onCompleted: {
+                                if(isplayerczar === true)
+                                    visible = true;
+                                else
+                                    visible = false;
+                            }
                         }
                     }
                 }
@@ -235,7 +280,7 @@ Item {
         TextField {
             id: tfinvite
             x: 80
-            y: 440
+            y: 410
             width: 130
             placeholderText: qsTr("Username")
         }
@@ -243,7 +288,7 @@ Item {
         Button {
             id: binvite
             x: 220
-            y: 440
+            y: 410
             width: 70
             text: qsTr("Invite User")
             onClicked: {
@@ -270,7 +315,7 @@ Item {
             visible: false
             id: bplus
             x: 80
-            y: 400
+            y: 380
             width: 24
             text: qsTr("+")
             onClicked: {
@@ -282,7 +327,7 @@ Item {
             visible: false
             id: bminus
             x: 150
-            y: 400
+            y: 380
             width: 24
             text: qsTr("-")
             onClicked: {
@@ -295,7 +340,7 @@ Item {
         Label {
             id: label2
             x: 20
-            y: 440
+            y: 410
             width: 60
             text: qsTr("Username:")
         }
@@ -312,9 +357,9 @@ Item {
         Label {
             id: lcurrentroom
             x: 20
-            y: 20
+            y: 24
             width: 120
-            height: 24
+            height: 16
             text: qsTr("currentRoom")
         }
 
@@ -322,7 +367,7 @@ Item {
             visible: false
             id: lrounds
             x: 120
-            y: 400
+            y: 380
             width: 24
             height: 24
             text: qsTr("5")
@@ -330,8 +375,9 @@ Item {
 
         Label {
             id: lroundtext
+            visible: false
             x: 20
-            y: 400
+            y: 380
             width: 50
             height: 24
             text: qsTr("Rounds:")
@@ -341,7 +387,7 @@ Item {
             visible: false
             id: bstartgame
             x: 220
-            y: 400
+            y: 380
             width: 70
             text: qsTr("Start Game")
             onClicked: nc.startGame(parseInt(lrounds.text));
@@ -350,8 +396,4 @@ Item {
 
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
+
