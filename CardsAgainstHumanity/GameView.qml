@@ -21,7 +21,6 @@ Item {
 
         function onGameState(state, round, maxround) {
             polling.restart();
-            //console.log(state, round, maxround);
             if(currentstate === state)
                 return;
             lrounds.text = "Rounds: " + round + "/" + maxround;
@@ -46,9 +45,9 @@ Item {
         function onCardsReceived(blackcard, cards, numpicks){
             lplayerwhitecards.clear();
             cards.forEach(card => lplayerwhitecards.append({name : card}));
-            //lblackcard.color = "#ffffff";
-            lblackcard.text = blackcard;   
+            lblackcard.text = blackcard;
             lwcards.picknum = numpicks;
+            lpicknum.text = "Pick " + numpicks;
         }
 
         function onPicksReceived(picks, users){
@@ -122,6 +121,7 @@ Item {
                             text: name
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.WordWrap
                         }
 
                         CheckBox {
@@ -315,7 +315,7 @@ Item {
         y: 70
         width: 100
         height: 100
-        color: "#0000FF"
+        color: "#000000"
     }
 
     Label {
@@ -326,6 +326,7 @@ Item {
         height: 80
         color: "#ffffff"
         text: qsTr("Label")
+        wrapMode: Text.WordWrap
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }

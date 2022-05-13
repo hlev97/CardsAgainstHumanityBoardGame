@@ -314,12 +314,10 @@ void NetworkController::handleRoomListResult(QNetworkReply *reply)
     QJsonArray jsonArray = json.array();
     for (auto v : jsonArray) {
         QJsonObject element = v.toObject();
-        qDebug() << element["roomId"].toString();
+        //qDebug() << element["roomId"].toString();
         nameList.append(element["roomId"].toString());
     }
-    //qDebug() << nameList;
 
-    //qDebug() << "registered and logged in as: " << loggedInUsername;
     emit roomListReceived(nameList);
 
 }
@@ -358,8 +356,8 @@ void NetworkController::handleGamestateResult(QNetworkReply *reply)
     QJsonDocument json = QJsonDocument::fromJson(response_data);
 
     QString state = json["turnState"].toString();
-    int round = json["currentRound"].toDouble();
-    int maxrounds = json["allRound"].toDouble();
+    int round = json["currentRound"].toInt();
+    int maxrounds = json["allRound"].toInt();
 //    qDebug() << state;
 //    qDebug() << round;
 //    qDebug() << maxrounds;
@@ -396,6 +394,8 @@ void NetworkController::handleCardsResult(QNetworkReply *reply)
     QJsonDocument json = QJsonDocument::fromJson(response_data);
 
 
+    numberOfPicks = json["black"]["pick"].toDouble();
+    blackCard = json["black"]["text"].toString();
 
         QJsonArray jsonArray = json["whites"].toArray();
         for (auto v : jsonArray) {
