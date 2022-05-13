@@ -284,7 +284,7 @@ void NetworkController::handleRoomDataResult(QNetworkReply *reply)
     czarName = json["czarId"].toString();
     rounds = json["rounds"].toInt();
     //qDebug() << "registered and logged in as: " << loggedInUsername;
-    emit roomDataReceived(playerList, czarName, rounds);
+    emit roomDataReceived(playerList, czarName, rounds, isplayerczar);
 }
 
 void NetworkController::getRoomList()

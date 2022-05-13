@@ -43,6 +43,7 @@ Item {
         }
 
         function onCardsReceived(blackcard, cards, cardids, numpicks){
+            bSendPicks.enabled = false;
             lblackcard.text = blackcard;
             lwcards.picknum = numpicks;
             lwcards.cards = cards;
@@ -52,6 +53,7 @@ Item {
         }
 
         function onPicksReceived(picks, users){
+            bSendVote.enabled = false;
             lvotecards.playerlist = users;
             lvotecards.answerlist = picks;
             lvotecardsmodel.clear();
@@ -107,7 +109,7 @@ Item {
                 property var cards: [];
                 property int picknum : 2;
                 property var showcards : function (){
-                    picks.clear();
+                    picks = [];
                     lplayerwhitecards.clear();
                     cards.forEach(card => {
                         lplayerwhitecards.append({name : card});

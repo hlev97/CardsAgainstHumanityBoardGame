@@ -11,7 +11,7 @@ Item {
     signal showMainMenuView()
     signal showGameView()
 
-    //todo: list special controls only for czar.
+    //todo: list special controls only for czar. rounds handling
 
     Connections{
         target: nc
@@ -21,17 +21,24 @@ Item {
             lroomsmodel.showlist();
         }
 
-        function onRoomDataReceived(players, czarname, rounds) {
+        property bool beenczar: false
+        function onRoomDataReceived(players, czarname, rounds, playername, isplayerczar) {
             listplayersmodel.clear();
-            players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname}));
-            lrounds.text = rounds;
+            players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar === "true"}));
+            if(isplayerczar === "true" && !beenczar){
+                beenczar = true;
+                lrounds.text = 5;
+                bplus.visible = true;
+                bmninus.visible = true;
+                bstartgame.visible = true;
+            }
+
             polling.restart();
         }
 
-        function onSuccessfullyJoinedRoom(name) {
+        function onSuccessfullyJoinedRoom(roomname) {
             nc.getRoomData();
-            lcurrentroom.text = name;
-            lrounds.text = 5;
+            lcurrentroom.text = roomname;
         }
 
         function onGameStarted(){
@@ -200,6 +207,7 @@ Item {
                     }
 
                     Button {
+                        visible: isplayerczar
                         text: qsTr("Kick")
                         onClicked: nc.kickPlayer(name);
                     }
@@ -242,6 +250,7 @@ Item {
         }
 
         Button {
+            visible: false
             id: bplus
             x: 80
             y: 400
@@ -253,6 +262,7 @@ Item {
         }
 
         Button {
+            visible: false
             id: bminus
             x: 150
             y: 400
@@ -292,6 +302,7 @@ Item {
         }
 
         Label {
+            visible: false
             id: lrounds
             x: 120
             y: 400
@@ -310,6 +321,7 @@ Item {
         }
 
         Button {
+            visible: false
             id: bstartgame
             x: 220
             y: 400
