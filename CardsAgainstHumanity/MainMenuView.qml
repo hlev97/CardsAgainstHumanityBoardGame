@@ -24,13 +24,14 @@ Item {
         function onRoomDataReceived(players, czarname, rounds) {
             listplayersmodel.clear();
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname}));
-            lrounds.text = rounds;
+            //lrounds.text = rounds;
             polling.restart();
         }
 
         function onSuccessfullyJoinedRoom(name) {
             nc.getRoomData();
             lcurrentroom.text = name;
+            lrounds.text = 5;
         }
 
         function onGameStarted(){
@@ -176,7 +177,7 @@ Item {
                 id: listplayersmodel
                 ListElement {
                     name: "Grey"
-                    isCzar: "false"
+                    isCzar: false
                 }
             }
             delegate: Item {
@@ -193,7 +194,7 @@ Item {
                         font.bold: true
 
                         Component.onCompleted: {
-                            if(isCzar === "true")
+                            if(isCzar === true)
                                 font.underline = true
                         }
                     }
