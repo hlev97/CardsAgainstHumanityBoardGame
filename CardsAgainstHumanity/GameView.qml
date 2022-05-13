@@ -21,6 +21,7 @@ Item {
 
         function onGameState(state, round, maxround) {
             polling.restart();
+            //console.log(state, round, maxround);
             if(currentstate === state)
                 return;
             lrounds.text = "Rounds: " + round + "/" + maxround;
@@ -29,7 +30,7 @@ Item {
                 votepane.visible = false;
                 pickpane.visible = true;
                 bSendPicks.enabled = false;
-                nc.getWhiteCards();
+                nc.getCards();
                 break;
             case "TURN_VOTING":
                 votepane.visible = true;
@@ -39,12 +40,14 @@ Item {
                 break;
             default:
             }
+            currentstate = state
         }
 
         function onCardsReceived(blackcard, cards, numpicks){
             lplayerwhitecards.clear();
             cards.forEach(card => lplayerwhitecards.append({name : card}));
-            lblackcard.text = blackcard;
+            //lblackcard.color = "#ffffff";
+            lblackcard.text = blackcard;   
             lwcards.picknum = numpicks;
         }
 
@@ -312,7 +315,7 @@ Item {
         y: 70
         width: 100
         height: 100
-        color: "#000000"
+        color: "#0000FF"
     }
 
     Label {
