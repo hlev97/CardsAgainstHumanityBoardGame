@@ -3,6 +3,7 @@ import QtQuick.Controls 6.2
 
 Item {
     //todo handle end game, make menu and draw
+
     width: 640
     height: 480
 
@@ -40,7 +41,7 @@ Item {
 
             case "TURN_END_GAME":
                 showMainMenuView();
-            break;
+                break;
             default:
             }
             currentstate = state
@@ -56,16 +57,22 @@ Item {
             lpicknum.text = "Pick " + numpicks;
         }
 
-        function onPicksReceived(picks, users){
+        function onPicksReceived(picks, users, picknum){
             bSendVote.enabled = false;
             lvotecards.playerlist = users;
             lvotecards.answerlist = [];
             lvotecardsmodel.clear();
-            let picknum = picks.length / users.length
+
             for(let i = 0; i < users.length; i++) {
                 let card = lblackcard.text;
-                for(let j = 0; j < picknum; j++){
-                    card = card.replace("_", picks[i*picknum + j]);
+                if(!card.includes("_")){
+                    card = card + picks[i*picknum]
+                }
+                else{
+                    for(let j = 0; j < picknum; j++){
+                        let picked = picks[i*picknum + j];
+                        card = card.replace("_", picked.slice(0,-1));
+                    }
                 }
                 lvotecardsmodel.append({name : card});
                 lvotecards.answerlist.push(card);
@@ -87,32 +94,30 @@ Item {
         y: 0
         width: 460
         height: 480
-        visible:true
+        visible: true
 
         Label {
             id: label2
-            x: 68
-            y: 209
+            x: 20
+            y: 180
             width: 59
             height: 16
             text: qsTr("Your Cards:")
         }
 
         ScrollView{
-            x: 60
-            y: 230
+            x: 10
+            y: 200
 
-            width: 310
-            height: 110
+            width: 420
+            height: 200
             ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
             ListView {
                 clip: true
                 id: lwcards
-                x: -9
-                y: -9
-                width: 300
-                height: 100
+                width: 420
+                height: 200
                 orientation: ListView.Horizontal
                 flickableDirection: Flickable.HorizontalFlick
                 boundsBehavior: Flickable.StopAtBounds
@@ -124,24 +129,24 @@ Item {
                     picks = [];
                     lplayerwhitecards.clear();
                     cards.forEach(card => {
-                        lplayerwhitecards.append({name : card});
-                   });
+                                      lplayerwhitecards.append({name : card});
+                                  });
                 }
 
                 delegate: Item {
-                    width: 110
-                    height: 100
+                    width: 210
+                    height: 200
                     Rectangle {
                         x: 5
-                        width: 100
-                        height: 100
+                        width: 200
+                        height: 200
                         color: "#ffffff"
 
                         Label {
                             x: 10
                             y: 10
-                            width: 80
-                            height: 50
+                            width: 190
+                            height: 150
                             color: "#000000"
                             text: name
                             horizontalAlignment: Text.AlignHCenter
@@ -150,8 +155,8 @@ Item {
                         }
 
                         CheckBox {
-                            x: 40
-                            y: 60
+                            x: 100
+                            y: 160
                             width: 20
                             height: 20
                             onClicked: {
@@ -190,8 +195,9 @@ Item {
 
         Button {
             id: bSendPicks
-            x: 326
-            y: 387
+            x: 340
+            y: 410
+            width: 80
             text: qsTr("Send")
             onClicked: {
                 nc.sendPickedCards(lwcards.picks);
@@ -201,9 +207,40 @@ Item {
 
         Label {
             id: lpicknum
-            x: 147
-            y: 209
+            x: 300
+            y: 415
+            width: 31
+            height: 16
             text: qsTr("Pick 2")
+        }
+
+        Rectangle {
+            id: rectangle
+            x: 130
+            y: 20
+            width: 210
+            height: 160
+            color: "#000000"
+
+            Label {
+                id: lblackcard
+                x: 5
+                y: 5
+                width: 200
+                height: 150
+                color: "#ffffff"
+                text: qsTr("Label")
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+            }
+        }
+
+        Label {
+            id: label1
+            x: 20
+            y: 25
+            text: qsTr("Black Card:")
         }
     }
 
@@ -217,11 +254,11 @@ Item {
 
         ScrollView {
             id: scrollView
-            x: 60
-            y: 230
+            x: 10
+            y: 50
 
-            width: 310
-            height: 110
+            width: 420
+            height: 360
             ScrollBar.vertical.policy: ScrollBar.AlwaysOff
 
             ListView {
@@ -230,8 +267,9 @@ Item {
                 flickableDirection: Flickable.HorizontalFlick
                 boundsBehavior: Flickable.StopAtBounds
                 id: lvotecards
-                width: 110
-                height: 160
+                width: 420
+                height: 360
+                visible: true
                 property var playerlist
                 property var answerlist
                 property var selectedAnswer: null
@@ -259,19 +297,19 @@ Item {
                     }
                 }
                 delegate: Item {
-                    width: 110
-                    height: 100
+                    width: 210
+                    height: 350
                     Rectangle {
                         x: 5
-                        width: 100
-                        height: 100
+                        width: 200
+                        height: 350
                         color: "#ffffff"
 
                         Label {
                             x: 10
                             y: 10
-                            width: 80
-                            height: 50
+                            width: 180
+                            height: 300
                             color: "#000000"
                             text: name
                             horizontalAlignment: Text.AlignHCenter
@@ -279,8 +317,8 @@ Item {
                         }
 
                         CheckBox {
-                            x: 40
-                            y: 60
+                            x: 100
+                            y: 320
                             width: 20
                             height: 20
                             onClicked: {
@@ -305,16 +343,18 @@ Item {
 
         Label {
             id: label
-            x: 33
-            y: 223
+            x: 20
+            y: 25
+            width: 140
             text: qsTr("Vote for the funniest card:")
         }
 
         Button {
             enabled: false
             id: bSendVote
-            x: 326
-            y: 375
+            x: 350
+            y: 410
+            width: 80
             text: qsTr("Send Vote")
             onClicked: nc.sendVote(lvotecards.playerlist[lvotecards.answerlist.indexOf(lvotecards.selectedAnswer)]);
         }
@@ -327,34 +367,6 @@ Item {
         text: qsTr("Rounds: 1/5")
     }
 
-    Label {
-        id: label1
-        x: 210
-        y: 70
-        text: qsTr("Black Card:")
-    }
-
-    Rectangle {
-        id: rectangle
-        x: 390
-        y: 70
-        width: 100
-        height: 100
-        color: "#000000"
-    }
-
-    Label {
-        id: lblackcard
-        x: 400
-        y: 80
-        width: 80
-        height: 80
-        color: "#ffffff"
-        text: qsTr("Label")
-        wrapMode: Text.WordWrap
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
 
 
 }

@@ -4,7 +4,7 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 
-Window {
+ApplicationWindow {
     width: 640
     height: 320
     visible: true
@@ -30,10 +30,14 @@ Window {
     Loader {
         id: displayedview
         onLoaded: {
+            window.maximumHeight = height;
+            window.maximumWidth = width;
+            window.minimumHeight = height;
+            window.minimumWidth = width;
             window.height = height;
             window.width = width;
         }
-        source: "qrc:/MainMenuView.qml"
+        source: "qrc:/GameView.qml"
     }
 
     Connections {
@@ -49,6 +53,19 @@ Window {
         }
         function onShowGameView(){
             showGameView();
+        }
+    }
+
+    menuBar: MenuBar{
+        Menu{
+            title: qsTr("File")
+            Action{
+                text: qsTr("About")
+            }
+            Action{
+                text: qsTr("Close")
+                onTriggered: window.close();
+            }
         }
     }
 
