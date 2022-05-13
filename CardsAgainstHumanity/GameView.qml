@@ -2,7 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 6.2
 
 Item {
-
+    //todo handle end game, make menu and draw
     width: 640
     height: 480
 
@@ -37,6 +37,10 @@ Item {
                 bSendVote.enabled = false;
                 nc.getPicks();
                 break;
+
+            case "TURN_END_GAME":
+                showMainMenuView();
+            break;
             default:
             }
             currentstate = state
@@ -57,12 +61,10 @@ Item {
             lvotecards.playerlist = users;
             lvotecards.answerlist = [];
             lvotecardsmodel.clear();
-            let picknum = lpicknum.text
-            let btext = lblackcard.text;
-            j = 0;
+            let picknum = picks.length / users.length
             for(let i = 0; i < users.length; i++) {
                 let card = lblackcard.text;
-                for(j = 0; j < picknum; j++){
+                for(let j = 0; j < picknum; j++){
                     card = card.replace("_", picks[i*picknum + j]);
                 }
                 lvotecardsmodel.append({name : card});
