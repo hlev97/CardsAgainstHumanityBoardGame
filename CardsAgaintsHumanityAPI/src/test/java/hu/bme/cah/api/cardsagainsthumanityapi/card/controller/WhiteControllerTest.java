@@ -23,16 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 class WhiteControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
-//    @BeforeEach
-//    void setUp(@Autowired WhiteService whiteService) throws IOException {
-//        ObjectMapper mapperWhite = new ObjectMapper();
-//        TypeReference<List<White>> typeReferenceWhite = new TypeReference<>(){};
-//        InputStream inputStreamWhite = TypeReference.class.getResourceAsStream("/database/white.json");
-//
-//        List<White> whites = mapperWhite.readValue(inputStreamWhite,typeReferenceWhite);
-//        whiteService.save(whites);
-//    }
-
     @Test
     void list(@Autowired MockMvc mvc) throws Exception {
         String result = "[{\"whiteId\":1,\"text\":\"\\\"Tweeting.\\\"\",\"pack\":\"Base\"},{\"whiteId\":2,\"text\":\"(I am doing Kegels right now.)\",\"pack\":\"Base\"},{\"whiteId\":3,\"text\":\"10,000 Syri";
