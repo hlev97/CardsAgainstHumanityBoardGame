@@ -11,8 +11,6 @@ Item {
     signal showMainMenuView()
     signal showGameView()
 
-    //todo: list special controls only for czar. rounds handling
-
     Connections{
         target: nc
 
@@ -27,7 +25,7 @@ Item {
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar}));
 
             if(isplayerczar && !beenczar){
-                label6.visible = true
+                lroundtext.visible = true
                 beenczar = true;
                 lrounds.visible = true;
                 lrounds.text = 5;
@@ -36,7 +34,7 @@ Item {
                 bstartgame.visible = true;
             }
             if(!isplayerczar){
-                label6.visible = false
+                lroundtext.visible = false
                 beenczar = false;
                 lrounds.visible = false;
                 lrounds.text = 5;
@@ -331,7 +329,7 @@ Item {
         }
 
         Label {
-            id: label6
+            id: lroundtext
             x: 20
             y: 400
             width: 50

@@ -55,9 +55,19 @@ Item {
         function onPicksReceived(picks, users){
             bSendVote.enabled = false;
             lvotecards.playerlist = users;
-            lvotecards.answerlist = picks;
+            lvotecards.answerlist = [];
             lvotecardsmodel.clear();
-            picks.forEach(card => lvotecardsmodel.append({name : card}));
+            let picknum = lpicknum.text
+            let btext = lblackcard.text;
+            j = 0;
+            for(let i = 0; i < users.length; i++) {
+                let card = lblackcard.text;
+                for(j = 0; j < picknum; j++){
+                    card = card.replace("_", picks[i*picknum + j]);
+                }
+                lvotecardsmodel.append({name : card});
+                lvotecards.answerlist.push(card);
+            }
         }
     }
 
@@ -146,7 +156,7 @@ Item {
                                 if(checkState === Qt.Checked)
                                     lwcards.picks.push(parseInt(lwcards.cardids[lwcards.cards.indexOf(name)]));
                                 else{
-                                    lwcards.picks.splice(lwcards.cardids[lwcards.cards.indexOf(name)], 1);
+                                    lwcards.picks.splice(lwcards.picks.indexOf(lwcards.cardids[lwcards.cards.indexOf(name)]), 1);
                                 }
 
                                 if(lwcards.picks.length !== lwcards.picknum){
