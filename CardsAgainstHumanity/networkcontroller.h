@@ -29,7 +29,7 @@ signals:
     void roomDataReceived(QStringList players, QString czarname, int rounds, bool isplayerczar);
     void connectionLost();
     void gameStarted();
-    void gameState(QString state, int round, int maxrounds);
+    void gameState(QString state, int round, int maxrounds, QStringList users, QList<int> scores);
     void cardsReceived(QString blackCard, QStringList cards, QList<int> cardIds, int picks);
     void picksReceived(QStringList picks, QStringList users, int numberOfPicks);
 

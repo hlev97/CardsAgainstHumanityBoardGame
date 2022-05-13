@@ -20,7 +20,12 @@ Item {
         target: nc
         property string currentstate : ""
 
-        function onGameState(state, round, maxround) {
+        function onGameState(state, round, maxround, users, scores) {
+            userlist.clear();
+            for(let i = 0; i < users.length; i++){
+                userlist.append({name: users[i], score:scores[i]});
+            }
+
             polling.restart();
             if(currentstate === state)
                 return;
@@ -245,6 +250,76 @@ Item {
     }
 
     Pane {
+        id: userlistpane
+        x: 0
+        y: 0
+        width: 180
+        height: 480
+
+        Text {
+            y: -5
+            x: 5
+            text: qsTr("Users:")
+            font.bold: true
+        }
+
+        ScrollView {
+            id: scrollView1
+            x: 0
+            y: 20
+            width: 160
+            height: 440
+            ScrollBar.horizontal.policy: ScrollBar.AlwaysOff
+
+            ListView {
+                clip:true
+                id: listView
+                width: 160
+                height: 440
+                delegate: Item {
+                    x: 5
+                    width: 160
+                    height: 30
+                    Row {
+                        id: row1
+                        spacing: 10
+                        Text {
+                            text: name
+                            anchors.verticalCenter: parent.verticalCenter
+                            font.bold: true
+                        }
+                        Text {
+                            text: score
+                        }
+                    }
+                }
+                model: ListModel {
+                    id: userlist
+                    ListElement {
+                        name: "Grey"
+                        score: 3
+                    }
+
+                    ListElement {
+                        name: "Red"
+                        score: 6
+                    }
+
+                    ListElement {
+                        name: "Blue"
+                        score: 8
+                    }
+
+                    ListElement {
+                        name: "Green"
+                        score: 10
+                    }
+                }
+            }
+        }
+    }
+
+    Pane {
         id: votepane
         x: 180
         y: 0
@@ -367,6 +442,21 @@ Item {
         text: qsTr("Rounds: 1/5")
     }
 
+    /*
+    ChartView {
+        title: "Bar series"
+        anchors.fill: parent
+        legend.alignment: Qt.AlignBottom
+        antialiasing: true
+
+        BarSeries {
+            id: mySeries
+            axisX: BarCategoryAxis { categories: ["2007", "2008", "2009", "2010", "2011", "2012" ] }
+            BarSet { label: "Bob"; values: [2, 2, 3, 4, 5, 6] }
+            BarSet { label: "Susan"; values: [5, 1, 2, 4, 1, 7] }
+            BarSet { label: "James"; values: [3, 5, 8, 13, 5, 8] }
+        }
+    }*/
 
 
 }
