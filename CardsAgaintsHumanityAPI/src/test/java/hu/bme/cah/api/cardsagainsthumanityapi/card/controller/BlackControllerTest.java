@@ -1,28 +1,26 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.card.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class BlackControllerTest {
-
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
     void list(@Autowired MockMvc mvc) throws Exception {
@@ -36,22 +34,126 @@ class BlackControllerTest {
     @Test
     void getByBlackId(@Autowired MockMvc mvc) throws Exception {
         String result = "{\"blackId\":1,\"text\":\"_ + _ = Hipsters\",\"pick\":2,\"pack\":\"Base\"}";
-            mvc.perform(get("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
-                        .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
-                        .contentType(MediaType.APPLICATION_JSON))
-                    .andExpect(status().isOk())
-                    .andExpect(content().string(result));
+        mvc.perform(get("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
+                    .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(result));
     }
 
-//    @Test
-//    void create(@Autowired MockMvc mvc) throws Exception {
-//        String result = "{\"blackId\":282,\"text\":\"test card\",\"pick\":2,\"pack\":\"Test Card\"}";
-//            mvc.perform(post("http://localhost:" + "8080" + "/api/black/{blackId}")
-//                        .content("{\"text\": \"test card\", \"pick\": 2, \"pack\": \"Test Card\"}")
-//                        .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                    .andExpect(content().json(result));
-//    }
+    @Test
+    void create(@Autowired MockMvc mvc) throws Exception {
+        Black black = new Black();
+        black.setText("test card");
+        black.setPick(2);
+        black.setPack("test card");
+        String body = objectMapper.writeValueAsString(black);
 
+        String result = "{\"blackId\":282,\"text\":\"test card\",\"pick\":2,\"pack\":\"test card\"}";
+        mvc.perform(post("http://localhost:" + "8080" + "/api/black/")
+                    .content(body)
+                    .accept(MediaType.APPLICATION_JSON)
+                    .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                    .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().json(result));
+    }
 
+    @Test
+    void updateForbiddenBase(@Autowired MockMvc mvc) throws Exception {
+        Black update = new Black();
+        update.setBlackId(1L);
+        update.setText("test card changed");
+        update.setPick(5);
+        update.setPack("test card");
+        String body = objectMapper.writeValueAsString(update);
+        mvc.perform(put("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
+                .content(body)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(user("hlev").password("hlev").roles("USER"))
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void updateAllowedBase(@Autowired MockMvc mvc) throws Exception {
+        Black update = new Black();
+        update.setBlackId(1L);
+        update.setText("test card changed");
+        update.setPick(5);
+        update.setPack("test card");
+        String body = objectMapper.writeValueAsString(update);
+        String result = "{\"blackId\":1,\"text\":\"test card changed\",\"pick\":5,\"pack\":\"test card\"}";
+        mvc.perform(put("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
+                        .content(body)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(result));
+    }
+
+    @Test
+    void updateAllowedCustom(@Autowired MockMvc mvc) throws Exception {
+        Black black = new Black();
+        black.setText("test card");
+        black.setPick(2);
+        black.setPack("test card");
+        String body = objectMapper.writeValueAsString(black);
+
+        mvc.perform(post("http://localhost:" + "8080" + "/api/black/")
+                        .content(body)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        Black update = new Black();
+        update.setText("test card changed");
+        update.setPick(5);
+        update.setPack("test card");
+        String body2 = objectMapper.writeValueAsString(update);
+        String result = "{\"blackId\":282,\"text\":\"test card changed\",\"pick\":5,\"pack\":\"test card\"}";
+        mvc.perform(put("http://localhost:" + "8080" + "/api/black/{blackId}", "282")
+                        .content(body2)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .with(user("hlev").password("hlev").roles("USER"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(result));
+    }
+
+    @Test
+    void deleteForbiddenBase(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
+                        .with(user("hlev").password("hlev").roles("USER"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deleteAllowedBase(@Autowired MockMvc mvc) throws Exception {
+        mvc.perform(delete("http://localhost:" + "8080" + "/api/black/{blackId}", "1")
+                        .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void deleteAllowedCustom(@Autowired MockMvc mvc) throws Exception {
+        Black black = new Black();
+        black.setText("test card");
+        black.setPick(2);
+        black.setPack("test card");
+        String body = objectMapper.writeValueAsString(black);
+
+        mvc.perform(post("http://localhost:" + "8080" + "/api/black/")
+                .content(body)
+                .accept(MediaType.APPLICATION_JSON)
+                .with(user("hlev").password("hlev").roles("USER", "ADMIN"))
+                .contentType(MediaType.APPLICATION_JSON));
+
+        mvc.perform(delete("http://localhost:" + "8080" + "/api/black/{blackId}", "282")
+                        .with(user("hlev").password("hlev").roles("USER"))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+    }
 }
