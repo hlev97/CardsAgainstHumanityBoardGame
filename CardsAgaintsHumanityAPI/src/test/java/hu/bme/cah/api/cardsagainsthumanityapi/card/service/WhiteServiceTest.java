@@ -1,12 +1,17 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.card.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +22,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class WhiteServiceTest {
     @Autowired
     WhiteService whiteService;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ObjectMapper mapperWhite = new ObjectMapper();
+        TypeReference<List<White>> typeReferenceWhite = new TypeReference<>(){};
+        InputStream inputStreamWhite = TypeReference.class.getResourceAsStream("/database/white.json");
+
+        List<White> whites = mapperWhite.readValue(inputStreamWhite,typeReferenceWhite);
+        whiteService.save(whites);
+    }
 
     @Test
     void contextLoads() {
@@ -58,15 +73,9 @@ class WhiteServiceTest {
 
     @Test
     void getByWhiteId() {
-        int size = whiteService.list().size();
+        White white = whiteService.list().get(0);
 
-        White newCard = new White();
-        newCard.setText("Test text");
-        newCard.setPack("Test pack");
-
-        whiteService.save(newCard);
-
-        assertEquals(newCard.getText(), whiteService.getByWhiteId(size+1).getText());
+        assertEquals(white.getText(), whiteService.getByWhiteId(1).getText());
     }
 
     @Test

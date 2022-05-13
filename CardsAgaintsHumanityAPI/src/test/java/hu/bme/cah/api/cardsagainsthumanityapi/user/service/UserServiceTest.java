@@ -1,14 +1,7 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.user.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
-import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
-import hu.bme.cah.api.cardsagainsthumanityapi.card.service.BlackService;
-import hu.bme.cah.api.cardsagainsthumanityapi.card.service.WhiteService;
 import hu.bme.cah.api.cardsagainsthumanityapi.user.domain.User;
-import hu.bme.cah.api.cardsagainsthumanityapi.user.repository.UserRepository;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +21,62 @@ class UserServiceTest {
     @Autowired
     UserService userService;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @BeforeEach
+    void setUp() {
+        User hlev = new User();
+        hlev.setUsername("hlev");
+        hlev.setPassword(passwordEncoder.encode("hlev"));
+        hlev.setEmail("heizerlevente97@gmail.com");
+        hlev.setAccountLocked(false);
+        hlev.setEnabled(true);
+        hlev.setAccountExpired(false);
+        hlev.setCredentialsExpired(false);
+        hlev.setRoles(List.of("ROLE_USER"));
+
+        User tumay = new User();
+        tumay.setUsername("tumay");
+        tumay.setPassword(passwordEncoder.encode("tumay"));
+        tumay.setEmail("heizerlevente97@gmail.com");
+        tumay.setAccountLocked(false);
+        tumay.setEnabled(true);
+        tumay.setAccountExpired(false);
+        tumay.setCredentialsExpired(false);
+        tumay.setRoles(List.of("ROLE_USER"));
+
+        User polya = new User();
+        polya.setUsername("polya");
+        polya.setPassword(passwordEncoder.encode("polya"));
+        polya.setEmail("heizerlevente97@gmail.com");
+        polya.setAccountLocked(false);
+        polya.setEnabled(true);
+        polya.setAccountExpired(false);
+        polya.setCredentialsExpired(false);
+        polya.setRoles(List.of("ROLE_USER"));
+
+        User czar = new User();
+        czar.setUsername("czar");
+        czar.setPassword(passwordEncoder.encode("czar"));
+        czar.setAccountLocked(false);
+        czar.setEnabled(true);
+        czar.setAccountExpired(false);
+        czar.setCredentialsExpired(false);
+        czar.setRoles(List.of("ROLE_CZAR", "ROLE_USER"));
+
+        User admin = new User();
+        admin.setUsername("admin");
+        admin.setPassword(passwordEncoder.encode("admin"));
+        admin.setAccountLocked(false);
+        admin.setEnabled(true);
+        admin.setAccountExpired(false);
+        admin.setCredentialsExpired(false);
+        admin.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
+
+        userService.saveAll(List.of(hlev, tumay, polya, czar, admin));
+    }
+
     @Test
     void contextLoads() {
         assertThat(userService).isNotNull();
@@ -39,6 +86,7 @@ class UserServiceTest {
     void save() throws Exception {
         User user = new User();
         user.setUsername("test");
+        user.setEmail("test@test.com");
         int beforeSave = userService.findAll().size();
         userService.save(user);
         int afterSave = userService.findAll().size();
@@ -102,6 +150,8 @@ class UserServiceTest {
         List<User> usersAfter = userService.findAll();
         int sizeAfterDelete = usersAfter.size();
         assertEquals(sizeBeforeDelete-1,sizeAfterDelete);
+        assertTrue(usersBefore.contains(hlev));
+        assertFalse(usersAfter.contains(hlev));
     }
 
     @Test

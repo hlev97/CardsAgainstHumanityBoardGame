@@ -1,12 +1,17 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.card.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +22,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class BlackServiceTest {
     @Autowired
     BlackService blackService;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ObjectMapper mapperBlack = new ObjectMapper();
+        TypeReference<List<Black>> typeReferenceBlack = new TypeReference<>(){};
+        InputStream inputStreamBlack = TypeReference.class.getResourceAsStream("/database/black.json");
+
+        List<Black> blacks = mapperBlack.readValue(inputStreamBlack,typeReferenceBlack);
+        blackService.save(blacks);
+    }
 
     @Test
     void contextLoads() {
@@ -58,15 +73,9 @@ class BlackServiceTest {
 
     @Test
     void getByBlackId() {
-        int size = blackService.list().size();
+        Black black = blackService.list().get(0);
 
-        Black newCard = new Black();
-        newCard.setText("Test text");
-        newCard.setPack("Test pack");
-
-        blackService.save(newCard);
-
-        assertEquals(newCard.getText(), blackService.getByBlackId(size+1).getText());
+        assertEquals(black.getText(), blackService.getByBlackId(1).getText());
     }
 
     @Test

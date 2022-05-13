@@ -1,12 +1,17 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.card.repository;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,6 +23,16 @@ class BlackRepositoryTest {
 
     @Autowired
     BlackRepository blackRepository;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        ObjectMapper mapperBlack = new ObjectMapper();
+        TypeReference<List<Black>> typeReferenceBlack = new TypeReference<>(){};
+        InputStream inputStreamBlack = TypeReference.class.getResourceAsStream("/database/black.json");
+
+        List<Black> blacks = mapperBlack.readValue(inputStreamBlack,typeReferenceBlack);
+        blackRepository.saveAll(blacks);
+    }
 
     @Test
     void contextLoads() {
