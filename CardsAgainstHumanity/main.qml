@@ -62,7 +62,7 @@ ApplicationWindow {
             title: qsTr("File")
             Action{
                 text: qsTr("About")
-                onTriggered: aboutdialog.open()
+                //onTriggered: aboutdialog.open()
             }
             Action{
                 text: qsTr("Close")
@@ -71,10 +71,10 @@ ApplicationWindow {
         }
     }
 
-    MessageDialog{
+    /*MessageDialog{
         title: qsTr("Cards Against Humanity")
         text: qsTr("Cards Against Humanity is a fill-in-the-blank party game that turns your awkward personality and lackluster social skills into hours of fun! Wow.")
         id: aboutdialog
-    }
+    }*/
 
 }

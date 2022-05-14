@@ -13,6 +13,8 @@ Item {
     signal showRegisterView()
     signal showMainMenuView()
     signal showGameView()
+    property bool beenczar: false
+    id: root
 
     Connections{
         target: nc
@@ -22,14 +24,14 @@ Item {
             lroomsmodel.showlist();
         }
 
-        property bool beenczar: false
+
         function onRoomDataReceived(players, czarname, rounds, isplayerczar) {
             listplayersmodel.clear();
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar}));
 
-            if(isplayerczar && !beenczar){
+            if(isplayerczar && !root.beenczar){
                 lroundtext.visible = true
-                beenczar = true;
+                root.beenczar = true;
                 lrounds.visible = true;
                 lrounds.text = 5;
                 bplus.visible = true;
@@ -38,7 +40,7 @@ Item {
             }
             if(!isplayerczar){
                 lroundtext.visible = false
-                beenczar = false;
+                root.beenczar = false;
                 lrounds.visible = false;
                 lrounds.text = 5;
                 bplus.visible = false;
@@ -312,6 +314,7 @@ Item {
                 listplayersmodel.clear();
                 lrounds.text = "";
 
+                root.beenczar = false;
                 lroundtext.visible = false
                 lrounds.visible = false;
                 lrounds.text = 5;

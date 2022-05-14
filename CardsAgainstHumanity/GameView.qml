@@ -1,8 +1,9 @@
-import QtQuick 2.15
+import QtQuick 2.2
 import QtQuick.Window 2.15
 import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
+import QtCharts 2.3
 
 Item {
     //todo handle end game, make menu and draw
@@ -49,7 +50,13 @@ Item {
                 break;
 
             case "TURN_END_GAME":
-                showMainMenuView();
+                endgamepane.visible = true;
+                let winner = users[scores.indexOf(Math.max(scores))];
+                gameendchart.title = "The winner is: " + winner;
+                gameendseries.clear();
+                gameendvalueaxis.max = Math.max(scores);
+                gameendcategories.categories = users;
+                gameendseries.append("values", scores);
                 break;
             default:
             }
@@ -447,21 +454,45 @@ Item {
         text: qsTr("Rounds: 1/5")
     }
 
-    /*
-    ChartView {
-        title: "Bar series"
+    Pane {
+        id: endgamepane
         anchors.fill: parent
-        legend.alignment: Qt.AlignBottom
-        antialiasing: true
 
-        BarSeries {
-            id: mySeries
-            axisX: BarCategoryAxis { categories: ["2007", "2008", "2009", "2010", "2011", "2012" ] }
-            BarSet { label: "Bob"; values: [2, 2, 3, 4, 5, 6] }
-            BarSet { label: "Susan"; values: [5, 1, 2, 4, 1, 7] }
-            BarSet { label: "James"; values: [3, 5, 8, 13, 5, 8] }
+        ChartView {
+            id: gameendchart
+            title: "The winner is Kálmán!"
+            anchors.fill: parent
+            legend.alignment: Qt.AlignBottom
+            legend.visible: false
+
+            HorizontalBarSeries {
+                id: gameendseries
+                axisY: BarCategoryAxis{
+                    id: gameendcategories
+                    categories:["Peti", "Kálmán", "Marci", "Dorka", "József"]
+                }
+                axisX: ValuesAxis{
+                    id: gameendvalueaxis
+                    min: 0
+                    max: 10
+                    tickType: ValuesAxis.TicksDynamic
+                    tickAnchor: 0
+                    tickInterval: 1
+                }
+                BarSet {
+                    values: [4, 7, 2, 0, 6]
+                }
+            }
         }
-    }*/
 
+        Button {
+            id: button
+            x: 460
+            y: 20
+            width: 120
+            text: qsTr("Back to main menu")
+            onClicked: showMainMenuView();
+        }
+    }
 
 }
