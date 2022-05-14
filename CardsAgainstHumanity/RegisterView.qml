@@ -4,6 +4,7 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 
+//View of the Register screen
 Item {
     width: 360
     height: 220
@@ -16,6 +17,7 @@ Item {
     Connections{
         target: nc
 
+        //Handler for the networkcontroller's successfullyRegistered signal
         function onSuccessfullyRegistered(){ showMainMenuView(); }
     }
 

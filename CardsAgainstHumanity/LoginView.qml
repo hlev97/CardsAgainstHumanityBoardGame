@@ -4,6 +4,7 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 
+//View of the login screen
 Item {
     width: 320
     height: 180
@@ -16,6 +17,7 @@ Item {
     Connections{
         target: nc
 
+        //Handler of the networkcontroller's successfullyLoggedIn signal
         function onSuccessfullyLoggedIn(){
             showMainMenuView();
         }

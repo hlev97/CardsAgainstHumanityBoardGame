@@ -4,6 +4,7 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 
+//Views responsible for showing the Main Menu screen
 Item {
 
     width: 640
@@ -16,20 +17,24 @@ Item {
     property bool beenczar: false
     id: root
 
+    //When loading the component we automatically refresh the list of rooms
+    Component.onCompleted: nc.getRoomList;
+
     Connections{
         target: nc
 
+        //On receiving the list of rooms from the network controller, load it into the corresponding view element.
         function onRoomListReceived(list) {
             lroomsmodel.roomlist = list;
             lroomsmodel.showlist();
         }
 
-
+        //On receiving data for a room we joined to, load it into the corresponding view elements.
         function onRoomDataReceived(players, czarname, rounds, isplayerczar) {
             listplayersmodel.clear();
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar}));
 
-            if(isplayerczar && !root.beenczar){
+            if(isplayerczar && !root.beenczar){ //Only enable special controls if the player became czar.
                 lroundtext.visible = true
                 root.beenczar = true;
                 lrounds.visible = true;
@@ -38,7 +43,7 @@ Item {
                 bminus.visible = true;
                 bstartgame.visible = true;
             }
-            if(!isplayerczar){
+            if(!isplayerczar){ //Hide special controls if the player is not czar.
                 lroundtext.visible = false
                 root.beenczar = false;
                 lrounds.visible = false;
@@ -48,9 +53,10 @@ Item {
                 bstartgame.visible = false;
             }
 
-            polling.restart();
+            polling.restart(); //We only continue polling after data receive, so congestion can be avoided.
         }
 
+        //On joining to room we start polling for room data.
         function onSuccessfullyJoinedRoom(roomname) {
             nc.getRoomData();
             roompane.visible = true;
@@ -58,11 +64,13 @@ Item {
             lcurrentroom.text = roomname;
         }
 
+        //When connecting to a started game, we switch to game view
         function onGameStarted(){
             showGameView();
         }
     }
 
+    //Timer responsible for polling the state of the room the user joined to.
     Timer{
         id: polling
         running: false
@@ -71,6 +79,7 @@ Item {
         onTriggered: nc.getRoomData();
     }
 
+    //Pane listing the rooms
     Pane {
         id: pane
         x: 0
@@ -200,6 +209,7 @@ Item {
         }
     }
 
+    //Pane showing the state of the room the player joined to.
     Pane {
         id: roompane
         x: 320
@@ -311,6 +321,7 @@ Item {
             width: 80
             text: qsTr("Leave Room")
             onClicked: {
+                //Actions to do on leaving the room: hiding the pane, and disabling controls
                 nc.leaveRoom();
                 lcurrentroom.text = "";
                 polling.stop();

@@ -5,6 +5,7 @@ import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 import QtCharts 2.3
 
+//View loaded for an ongoing game
 Item {
 
     width: 640
@@ -16,6 +17,8 @@ Item {
     signal showGameView()
 
     Component.onCompleted: {
+
+        //On load we begin to poll the state of the game
         nc.updateGameState();
     }
 
@@ -23,14 +26,15 @@ Item {
         target: nc
         property string currentstate : ""
 
+        //Receiving the current state of the game we update the views.
         function onGameState(state, round, maxround, users, scores) {
             userlist.clear();
             for(let i = 0; i < users.length; i++){
                 userlist.append({name: users[i], score:scores[i]});
             }
 
-            polling.restart();
-            if(currentstate === state)
+            polling.restart(); //Only restart polling after we received the current state in order to avoid congestion.
+            if(currentstate === state) //We only have to take further action if the state of the game have changed.
                 return;
             lrounds.text = "Rounds: " + round + "/" + maxround;
             switch(state){
@@ -62,6 +66,7 @@ Item {
             currentstate = state
         }
 
+        //When receiving cards to choose from, we load it into the list
         function onCardsReceived(blackcard, cards, cardids, numpicks){
             bSendPicks.enabled = false;
             lblackcard.text = blackcard;
@@ -72,6 +77,7 @@ Item {
             lpicknum.text = "Pick " + numpicks;
         }
 
+        //When receiving picks of other users, load it into the voting list
         function onPicksReceived(picks, users, picknum){
             bSendVote.enabled = false;
             lvotecards.playerlist = users;
@@ -80,13 +86,13 @@ Item {
 
             for(let i = 0; i < users.length; i++) {
                 let card = lblackcard.text;
-                if(!card.includes("_")){
-                    card = card + picks[i*picknum]
+                if(!card.includes("_")){ //If the card contains no underline character, append the answer to the end
+                    card = card + " " + picks[i*picknum];
                 }
                 else{
                     for(let j = 0; j < picknum; j++){
                         let picked = picks[i*picknum + j];
-                        card = card.replace("_", picked.slice(0,-1));
+                        card = card.replace("_", picked.slice(0,-1)); //Cutting the dot from the end of the white card.
                     }
                 }
                 lvotecardsmodel.append({name : card});
@@ -95,6 +101,7 @@ Item {
         }
     }
 
+    //Timer responsible for updating the state.
     Timer{
         id: polling
         running: false
@@ -103,6 +110,7 @@ Item {
         onTriggered: nc.updateGameState();
     }
 
+    //Subcomponent responsible for showing the possibly picks for the user
     Pane {
         id: pickpane
         x: 180
@@ -175,6 +183,7 @@ Item {
                             width: 20
                             height: 20
                             onClicked: {
+                                //Logic to make sure sending is only possible when the necessary amount of checkboxes are selected.
                                 if(checkState === Qt.Checked)
                                     lwcards.picks.push(parseInt(lwcards.cardids[lwcards.cards.indexOf(name)]));
                                 else{
@@ -259,6 +268,7 @@ Item {
         }
     }
 
+    //Subcomponent the show users and their scores
     Pane {
         id: userlistpane
         x: 0
@@ -329,6 +339,7 @@ Item {
         }
     }
 
+    //Subcomponent responsible for showing the voting screen at the end of the round.
     Pane {
         id: votepane
         x: 180
@@ -408,6 +419,7 @@ Item {
                             width: 20
                             height: 20
                             onClicked: {
+                                //Logic to make sure only one checkbox is selected
                                 if(checkState === Qt.Checked){
                                     if(lvotecards.selectedButton !== null){
                                         lvotecards.selectedButton.checked = false;
@@ -453,6 +465,8 @@ Item {
         text: qsTr("Rounds: 1/5")
     }
 
+
+    //Subcomponent responsible for showing the statistics chart at the end of the game
     Pane {
         id: endgamepane
         anchors.fill: parent
