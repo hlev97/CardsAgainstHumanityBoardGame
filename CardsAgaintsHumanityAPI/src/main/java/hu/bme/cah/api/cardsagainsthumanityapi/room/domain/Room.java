@@ -245,40 +245,6 @@ public class Room {
         log.trace("In Room constructor");
     }
 
-    public void startGame() {
-        log.trace("In startGame method");
-        setStartedRoom(true);
-        currentRound = 1;
-        setTurnState(TURN_CHOOSING_CARDS);
-
-    }
 
 
-
-    public List<Integer> getUserWhiteIds(String userName)
-    {
-        log.trace("In getUserWhiteIds");
-        List<Integer> userWhiteCardIds = new ArrayList<Integer>();
-        if (!connectedUsers.contains(userName)) {
-            log.trace("In if branch");
-            log.info("The user does not in the list of connected users");
-            return userWhiteCardIds;
-        }
-        int numOfUsers = connectedUsers.size();
-        int idx = connectedUsers.indexOf(userName);
-        log.trace("In for cycle");
-        log.info("Add white cards to user");
-        for (int i = 0; i < 5; i++)
-        {
-            userWhiteCardIds.add(whiteIds.get((currentRound - 1) * numOfUsers * 5 + idx * 5 + i));
-        }
-        return userWhiteCardIds;
-    }
-
-    @Transient
-    public int BlackId()
-    {
-        log.trace("In BlackId method");
-        return blackIds.get(currentRound - 1);
-    }
 }

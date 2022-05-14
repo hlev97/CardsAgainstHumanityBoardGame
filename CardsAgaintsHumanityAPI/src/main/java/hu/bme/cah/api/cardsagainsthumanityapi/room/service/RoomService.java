@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room.TURN_CHOOSING_CARDS;
+
 /**
  * Ensures that {@link RoomController} can access {@link Room} through {@link RoomRepository}
  */
@@ -264,8 +267,12 @@ public class RoomService {
         log.info("init user votes map");
         room.setUserVotes(new HashMap<>());
         log.info("start game");
-        room.startGame();
-        Room initGameRoom = roomRepository.initGame(roomId);
+
+        room.setStartedRoom(true);
+        room.setCurrentRound(1);
+        room.setTurnState(TURN_CHOOSING_CARDS);
+
+        Room initGameRoom = roomRepository.save(room);
         if (initGameRoom == null) {
             log.error("Init was unsuccessful");
         } else {
@@ -283,7 +290,7 @@ public class RoomService {
     public GameState getGameState(Room room, String name) {
         log.trace("In RoomService getGameState(room,name)");
         GameState gs = new GameState();
-        List<Integer> whiteIds = room.getUserWhiteIds(name);
+        List<Integer> whiteIds = getUserWhiteIds(room, name);
         List<White> whites = new ArrayList<White>();
         log.trace("In for cycle");
         for (int i: whiteIds)
@@ -297,7 +304,7 @@ public class RoomService {
         log.info("Set allRound");
         gs.allRound = room.getRounds();
         log.info("Set black");
-        gs.black = getByBlackId(room.BlackId());
+        gs.black = getByBlackId(getCurrentBlackId(room));
         log.info("Set whites");
         gs.whites = whites;
         log.info("Set scores");
@@ -349,6 +356,34 @@ public class RoomService {
         User user = userRepository.getById(userName);
         log.info("Sending email to user's email address");
         emailService.sendEmail(user.getEmail(), "Invite", "You are invited to join the " + roomId + " room");
+    }
+
+    public List<Integer> getUserWhiteIds(Room room, String userName)
+    {
+        log.trace("In getUserWhiteIds");
+        List<Integer> userWhiteCardIds = new ArrayList<Integer>();
+        if (!room.getConnectedUsers().contains(userName)) {
+            log.trace("In if branch");
+            log.info("The user is not in the list of connected users");
+            return userWhiteCardIds;
+        }
+        int numOfUsers = room.getConnectedUsers().size();
+        int idx = room.getConnectedUsers().indexOf(userName);
+        log.trace("In for cycle");
+        log.info("Add white cards to user");
+        List<Integer> whiteIds = room.getWhiteIds();
+        int currentRound = room.getCurrentRound();
+        for (int i = 0; i < 5; i++)
+        {
+            userWhiteCardIds.add(whiteIds.get((currentRound - 1) * numOfUsers * 5 + idx * 5 + i));
+        }
+        return userWhiteCardIds;
+    }
+
+    public int getCurrentBlackId(Room room)
+    {
+        log.trace("In BlackId method");
+        return room.getBlackIds().get(room.getCurrentRound() - 1);
     }
     
 }

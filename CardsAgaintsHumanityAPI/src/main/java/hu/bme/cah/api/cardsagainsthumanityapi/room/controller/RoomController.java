@@ -462,14 +462,14 @@ public class RoomController {
                 log.trace("In try block: choose card");
                 if (room.getConnectedUsers().contains(name) && room.getTurnState().equals(TURN_CHOOSING_CARDS)) {
                     log.trace("In if block: the invoker is in the room and and game state is choosing cards");
-                    List<Integer> availableCards = room.getUserWhiteIds(name);
+                    List<Integer> availableCards = roomService.getUserWhiteIds(room, name);
                     if (!map.containsKey("cards")) {
                         log.trace("In if block: the the map does not contain the key: \"cards\"");
                         log.error("Choosing is forbidden");
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
                     }
                     List<Integer> pickedCards = map.get("cards");
-                    if (pickedCards.size() != roomService.getByBlackId(room.BlackId()).getPick()) {
+                    if (pickedCards.size() != roomService.getByBlackId(roomService.getCurrentBlackId(room)).getPick()) {
                         log.trace("In if block: the size of the picked cards does not equal to pick defined by black card");
                         log.error("Choosing is forbidden");
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
@@ -496,7 +496,7 @@ public class RoomController {
                     }
                     log.info("Set chosen cards for user");
                     room.setUserChosen(chosen);
-                    if (room.getUserChosen().size() >= roomService.getByBlackId(room.BlackId()).getPick() * room.getConnectedUsers().size()) {
+                    if (room.getUserChosen().size() >= roomService.getByBlackId(roomService.getCurrentBlackId(room)).getPick() * room.getConnectedUsers().size()) {
                         log.trace("In if block: chosen cards is more all equals with needed black cards");
                         room.setTurnState(TURN_VOTING);
                     }
