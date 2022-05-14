@@ -41,7 +41,7 @@ public class CardsAgainstHumanityApiApplication {
     }
 
     /**
-     * Bea that inits the the databases
+     * Bean that inits the the databases
      * @param whiteService whiteService for CRUD operations
      * @param blackService blackService for CRUD operations
      * @param passwordEncoder password encoding
