@@ -54,7 +54,7 @@ class BlackServiceTest {
     }
 
     @Test
-    void testSave() {
+    void saveAll() {
         Black newCard1 = new Black();
         newCard1.setText("Test text");
         newCard1.setPack("Test pack");

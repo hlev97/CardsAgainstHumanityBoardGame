@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Generates random integer sequence between 0 and a given number
+ */
 @Slf4j
 public class GenerateRandomIdsSequence implements GenerateIds {
     @Override

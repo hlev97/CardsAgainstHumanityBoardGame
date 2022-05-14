@@ -63,13 +63,23 @@ public class WhiteController {
     @GetMapping("/{whiteId}")
     @Secured(User.ROLE_USER)
     public ResponseEntity<White> getByWhiteId(@PathVariable long whiteId) {
-        log.trace("WhiteController getWhiteById(whiteId) method accessed");
-        String text = "Getting white card by id";
-        Log loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
+        String text = "WhiteController getWhiteById(whiteId) method accessed";
+        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+        logService.save(loggedEvent);
+        log.trace(text);
+        text = "Getting white card by id";
+        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
         logService.save(loggedEvent);
         log.info(text);
         White white = whiteService.getByWhiteId(whiteId);
         if (white == null) {
+            text = "In if block: the card is null";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
+            text = "Card with the certain id was not found";
+            loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
+            logService.save(loggedEvent);
             log.trace("In if block:");
             text = "Card with the certain id was not found";
             loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
@@ -77,6 +87,10 @@ public class WhiteController {
             log.error(text);
             return ResponseEntity.notFound().build();
         } else {
+            text = "In else block: the card is not null";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
             text = "The card was found successfully";
             loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
             logService.save(loggedEvent);
@@ -93,8 +107,12 @@ public class WhiteController {
     @PostMapping
     @Secured({User.ROLE_USER, User.ROLE_ADMIN})
     public White create(@RequestBody White white) {
-        String text = "Adding new white card...";
-        Log loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
+        String text = "In WhiteController create(white) method";
+        Log loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
+        logService.save(loggedEvent);
+        log.trace(text);
+        text = "Adding new white card...";
+        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
         logService.save(loggedEvent);
         log.info(text);
         white.setWhiteId(null);
@@ -127,18 +145,34 @@ public class WhiteController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         try {
+            text = "In try block: updateing room";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
             if (Objects.equals(whiteService.getByWhiteId(whiteId).getPack(), "Base")) {
+                text = "In if block: card is in the base set";
+                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                logService.save(loggedEvent);
+                log.trace(text);
                 text = "The invoker must be an admin to modify base cards";
                 loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());
                 logService.save(loggedEvent);
                 log.warn(text);
                 if (auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(User.ROLE_ADMIN))) {
+                    text = "In if block: the invoker user is not an admin";
+                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                    logService.save(loggedEvent);
+                    log.trace(text);
                     text = "The user is not authenticated to do this operation";
                     loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
                     logService.save(loggedEvent);
                     log.error(text);
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
                 } else {
+                    text = "In else block: the invoker user is an admin";
+                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                    logService.save(loggedEvent);
+                    log.trace(text);
                     text = "The invoker is able to do the modification";
                     loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
                     logService.save(loggedEvent);
@@ -147,6 +181,10 @@ public class WhiteController {
                     return ResponseEntity.ok(result);
                 }
             } else {
+                text = "In else block: the card is not in the base set";
+                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                logService.save(loggedEvent);
+                log.trace(text);
                 White result = whiteService.update(whiteId, white);
                 text = "The invoker is able to do the modification";
                 loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
@@ -155,6 +193,10 @@ public class WhiteController {
                 return ResponseEntity.ok(result);
             }
         } catch(NonTransientDataAccessException e) {
+            text = "In catch block:";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
             text = "The user is not authenticated to do this operation";
             loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
             logService.save(loggedEvent);
@@ -171,8 +213,13 @@ public class WhiteController {
     @DeleteMapping("/{whiteId}")
     @Secured({User.ROLE_ADMIN, User.ROLE_USER})
     public ResponseEntity<?> delete(@PathVariable long whiteId) {
-        String text = "Deleting white card with given id...";
-        Log loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
+        String text = "In WhiteController delete(whiteId) method";
+        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+        logService.save(loggedEvent);
+        log.trace(text);
+
+        text = "Deleting white card with given id...";
+        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
         logService.save(loggedEvent);
         log.info(text);
         text = "The invoker must have at least user role to do this operation";
@@ -182,24 +229,44 @@ public class WhiteController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         White white = whiteService.getByWhiteId(whiteId);
         if (white == null) {
+            text = "In if block: card is null";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
             text = "The card with the given id was not found";
             loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
             logService.save(loggedEvent);
             log.error(text);
             return ResponseEntity.notFound().build();
         } else {
+            text = "In else block: card is not null";
+            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+            logService.save(loggedEvent);
+            log.trace(text);
             if (Objects.equals(whiteService.getByWhiteId(whiteId).getPack(), "Base")) {
+                text = "In if block: card is in base set";
+                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                logService.save(loggedEvent);
+                log.trace(text);
                 text = "The invoker must be an admin to delete base cards";
                 loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());
                 logService.save(loggedEvent);
                 log.warn(text);
                 if (auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals(User.ROLE_ADMIN))) {
+                    text = "In else block: The invoker user is not admin";
+                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                    logService.save(loggedEvent);
+                    log.trace(text);
                     text = "The user is not authenticated to delete this card";
                     loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());
                     logService.save(loggedEvent);
                     log.error(text);
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
                 } else {
+                    text = "In else block: the invoker user is admin";
+                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                    logService.save(loggedEvent);
+                    log.trace(text);
                     text = "The invoker is able to delete this card";
                     loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
                     logService.save(loggedEvent);
@@ -212,6 +279,10 @@ public class WhiteController {
                     return ResponseEntity.ok().build();
                 }
             } else {
+                text = "In else block: The card is not in base set";
+                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+                logService.save(loggedEvent);
+                log.trace(text);
                 whiteService.delete(whiteId);
                 text = "The deletion was successful";
                 loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());

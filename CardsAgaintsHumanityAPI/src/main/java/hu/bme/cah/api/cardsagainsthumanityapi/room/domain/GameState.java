@@ -6,6 +6,9 @@ import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents game state of a room
+ */
 public class GameState {
     public String turnState;
     public int currentRound;

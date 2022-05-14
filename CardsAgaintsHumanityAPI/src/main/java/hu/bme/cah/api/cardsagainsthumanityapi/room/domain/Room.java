@@ -11,49 +11,96 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a room
+ */
 @Slf4j
 @Data
 @AllArgsConstructor
 @Entity
 public class Room {
-
+    /**
+     * Game states
+     */
     public static final String TURN_CHOOSING_CARDS = "TURN_CHOOSING_CARDS";
     public static final String TURN_VOTING = "TURN_VOTING";
     public static final String TURN_END_GAME = "TURN_END_GAME";
 
-
+    /**
+     * Room id
+     */
     private String roomId;
 
+    /**
+     * Id setted
+     * @param roomId id
+     */
     public void setRoomId(String roomId) {
         log.trace("In setRoomId setter method");
         this.roomId = roomId;
     }
 
+    /**
+     * Id getter the rooms name is given by the creator and it mus be unique
+     * @return id
+     */
     @Id
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     public String getRoomId() {
         log.trace("In getRoomId getter method");
         return roomId;
     }
 
+    /**
+     * Cards generated for room
+     */
     private List<Integer> whiteIds;
     private List<Integer> blackIds;
 
     //private List<String> allowedUsers;
+    /**
+     * Users connecred to the room
+     */
     private List<String> connectedUsers;
 
+    /**
+     * The id of the czar
+     */
     private String czarId;
+    /**
+     * Number of rounds tha users want to play
+     */
     private int rounds;
+    /**
+     * The current round's number
+     */
     private int currentRound;
     //private boolean privateRoom;
+    /**
+     * Represents if the game has started or not
+     */
     private boolean startedRoom;
+    /**
+     * Represents the game state
+     */
     private String turnState;
 
+    /**
+     * A collection that stores (user, point) pairs
+     */
     private Map<String, Integer> userScores;
+    /**
+     * A collection that stores (user, voted_user) pairs
+     */
     private Map<String, String> userVotes;
 
-
+    /**
+     * A collection that stores (user, chosen_card) pairs
+     */
     private Map<String, Integer> userChosen;
+
+    /**
+     * Getters and setters
+     */
 
     @ElementCollection
     @CollectionTable(

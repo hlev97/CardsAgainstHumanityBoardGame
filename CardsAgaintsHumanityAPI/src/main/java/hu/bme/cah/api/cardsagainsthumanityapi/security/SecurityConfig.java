@@ -63,9 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
 // Remove the commenting for the headers line till the line which contains .and() to log into h2 database console
-            .headers()
-                .frameOptions().disable()
-                .and()
+//            .headers()
+//                .frameOptions().disable()
+//                .and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
     }
 

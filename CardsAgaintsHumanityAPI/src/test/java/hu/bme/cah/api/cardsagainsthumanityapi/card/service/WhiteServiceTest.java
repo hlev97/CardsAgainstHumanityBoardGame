@@ -54,7 +54,7 @@ class WhiteServiceTest {
     }
 
     @Test
-    void testSave() {
+    void saveAll() {
         White newCard1 = new White();
         newCard1.setText("Test text");
         newCard1.setPack("Test pack");

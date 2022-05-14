@@ -136,7 +136,6 @@ public class RoomController {
         } else {
             log.trace("In else block: the room is null");
             log.error("The room is null");
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             throw new EntityNotFoundException("The room with the given id was not found");
         }
     }
@@ -171,7 +170,6 @@ public class RoomController {
         } else {
             log.trace("In else block: the room is null");
             log.error("The removal is forbidden");
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             throw new EntityNotFoundException("The room with the given id was not found");
         }
     }
@@ -207,7 +205,6 @@ public class RoomController {
         } else {
             log.trace("In else block: the room is null");
             log.error("The removal was not successful");
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             throw new EntityNotFoundException("The room with the given id was not found");
         }
     }
@@ -333,7 +330,6 @@ public class RoomController {
         } else  {
             log.trace("In else block: the room is null");
             log.error("The initialization is forbidden");
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             throw new EntityNotFoundException("The room with the given id was not found");
         }
     }
@@ -441,8 +437,6 @@ public class RoomController {
         } else {
             log.trace("In else block: the room is null");
             log.error("The room is null");
-            //TODO: az ilyeneket lehet le kene cserelni entity not found exception dobasra
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(room);
             throw new EntityNotFoundException("The room with the given id was not found");
         }
     }

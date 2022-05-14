@@ -12,12 +12,20 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
+/**
+ * Repository of CRUD operations
+ */
 @Slf4j
 @Repository
 public class RoomRepository {
     @PersistenceContext
     private EntityManager em;
 
+    /**
+     * Saves new room to database
+     * @param room room
+     * @return
+     */
     @Transactional
     public Room save(Room room) {
         log.trace("In save(room) method");
@@ -26,6 +34,10 @@ public class RoomRepository {
         return savedRoom;
     }
 
+    /**
+     * Save all given rooms to databse
+     * @param rooms rooms
+     */
     @Transactional
     public void save(List<Room> rooms) {
         log.trace("In save(rooms) method");
@@ -34,6 +46,10 @@ public class RoomRepository {
             save(room);
     }
 
+    /**
+     * Reads all room from dadtabase
+     * @return rooms
+     */
     public List<Room> list() {
         log.trace("In RoomRepository list() method");
         List<Room> rooms = em.createQuery("SELECT r FROM Room r", Room.class).getResultList();
@@ -41,6 +57,11 @@ public class RoomRepository {
         return rooms;
     }
 
+    /**
+     * Reads specific room from databse
+     * @param roomId id
+     * @return room
+     */
     public Room findByRoomId(String roomId) {
         log.trace("In RoomRepository findByRoomId(roomId) method");
         Room result = em.find(Room.class, roomId);
@@ -52,6 +73,10 @@ public class RoomRepository {
         return result;
     }
 
+    /**
+     * Deletes a specific room from database
+     * @param roomId removable roomId
+     */
     @Transactional
     public void removeByRoomId(String roomId) {
         log.trace("In RoomRepository removeByRoomId(roomId) method");
@@ -59,6 +84,12 @@ public class RoomRepository {
         em.remove(room);
     }
 
+    /**
+     * Updates room with given id with black and white cards
+     * @param roomId updatable roomId
+     * @param room room that stores the black and white cards lists
+     * @return updated room
+     */
     @Transactional
     public Room updateRoomCards(String roomId, Room room) {
         log.trace("In RoomRepository updateRoomCards(roomId, room) method");
@@ -90,6 +121,12 @@ public class RoomRepository {
 //        }
 //    }
 
+    /**
+     *  Updates room with given id with a new user
+     * @param roomId updatable roomId
+     * @param name users name
+     * @return updsted room
+     */
     @Transactional
     public Room updateConnectedUsers(String roomId, String name) {
         log.trace("In RoomRepository updateConnectedUsers(roomId, name) method");
@@ -109,6 +146,12 @@ public class RoomRepository {
         }
     }
 
+    /**
+     * Deletes a user from room with givenId
+     * @param roomId roomId
+     * @param name username
+     * @return Room
+     */
     @Transactional
     public Room deleteConnectedUsers(String roomId, String name) {
         log.trace("In RoomRepository deleteConnectedUsers(roomId, name) method");
@@ -128,6 +171,11 @@ public class RoomRepository {
         }
     }
 
+    /**
+     * Initializes tha game for a specified room
+     * @param roomId roomId
+     * @return room
+     */
     @Transactional
     public Room initGame(String roomId) {
         log.trace("In RoomRepository initGame(roomId) method");

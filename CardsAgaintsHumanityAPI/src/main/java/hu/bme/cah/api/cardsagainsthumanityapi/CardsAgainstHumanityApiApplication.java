@@ -28,13 +28,10 @@ import java.util.List;
 
 @SpringBootApplication
 @EnableScheduling
-public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
+public class CardsAgainstHumanityApiApplication {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private EmailService emailService;
@@ -43,8 +40,15 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
         SpringApplication.run(CardsAgainstHumanityApiApplication.class, args);
     }
 
+    /**
+     * Bea that inits the the databases
+     * @param whiteService whiteService for CRUD operations
+     * @param blackService blackService for CRUD operations
+     * @param passwordEncoder password encoding
+     * @return args for command line runner
+     */
     @Bean
-    CommandLineRunner runner(WhiteService whiteService, BlackService blackService){
+    CommandLineRunner runner(WhiteService whiteService, BlackService blackService, PasswordEncoder passwordEncoder){
         return args -> {
             ObjectMapper mapperWhite = new ObjectMapper();
             TypeReference<List<White>> typeReferenceWhite = new TypeReference<>(){};
@@ -59,62 +63,62 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
 
             List<Black> blacks = mapperBlack.readValue(inputStreamBlack,typeReferenceBlack);
             blackService.save(blacks);
+
+            User hlev = new User();
+            hlev.setUsername("hlev");
+            hlev.setPassword(passwordEncoder.encode("hlev"));
+            hlev.setEmail("heizerlevente97@gmail.com");
+            hlev.setAccountLocked(false);
+            hlev.setEnabled(true);
+            hlev.setAccountExpired(false);
+            hlev.setCredentialsExpired(false);
+            hlev.setRoles(List.of("ROLE_USER"));
+
+            User tumay = new User();
+            tumay.setUsername("tumay");
+            tumay.setPassword(passwordEncoder.encode("tumay"));
+            tumay.setEmail("heizerlevente97@gmail.com");
+            tumay.setAccountLocked(false);
+            tumay.setEnabled(true);
+            tumay.setAccountExpired(false);
+            tumay.setCredentialsExpired(false);
+            tumay.setRoles(List.of("ROLE_USER"));
+
+            User polya = new User();
+            polya.setUsername("polya");
+            polya.setPassword(passwordEncoder.encode("polya"));
+            polya.setEmail("heizerlevente97@gmail.com");
+            polya.setAccountLocked(false);
+            polya.setEnabled(true);
+            polya.setAccountExpired(false);
+            polya.setCredentialsExpired(false);
+            polya.setRoles(List.of("ROLE_USER"));
+
+            User czar = new User();
+            czar.setUsername("czar");
+            czar.setPassword(passwordEncoder.encode("czar"));
+            czar.setAccountLocked(false);
+            czar.setEnabled(true);
+            czar.setAccountExpired(false);
+            czar.setCredentialsExpired(false);
+            czar.setRoles(List.of("ROLE_CZAR", "ROLE_USER"));
+
+            User admin = new User();
+            admin.setUsername("admin");
+            admin.setPassword(passwordEncoder.encode("admin"));
+            admin.setAccountLocked(false);
+            admin.setEnabled(true);
+            admin.setAccountExpired(false);
+            admin.setCredentialsExpired(false);
+            admin.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
+
+            userRepository.saveAll(List.of(hlev, tumay, polya, czar, admin));
         };
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        User hlev = new User();
-        hlev.setUsername("hlev");
-        hlev.setPassword(passwordEncoder.encode("hlev"));
-        hlev.setEmail("heizerlevente97@gmail.com");
-        hlev.setAccountLocked(false);
-        hlev.setEnabled(true);
-        hlev.setAccountExpired(false);
-        hlev.setCredentialsExpired(false);
-        hlev.setRoles(List.of("ROLE_USER"));
-
-        User tumay = new User();
-        tumay.setUsername("tumay");
-        tumay.setPassword(passwordEncoder.encode("tumay"));
-        tumay.setEmail("heizerlevente97@gmail.com");
-        tumay.setAccountLocked(false);
-        tumay.setEnabled(true);
-        tumay.setAccountExpired(false);
-        tumay.setCredentialsExpired(false);
-        tumay.setRoles(List.of("ROLE_USER"));
-
-        User polya = new User();
-        polya.setUsername("polya");
-        polya.setPassword(passwordEncoder.encode("polya"));
-        polya.setEmail("heizerlevente97@gmail.com");
-        polya.setAccountLocked(false);
-        polya.setEnabled(true);
-        polya.setAccountExpired(false);
-        polya.setCredentialsExpired(false);
-        polya.setRoles(List.of("ROLE_USER"));
-
-        User czar = new User();
-        czar.setUsername("czar");
-        czar.setPassword(passwordEncoder.encode("czar"));
-        czar.setAccountLocked(false);
-        czar.setEnabled(true);
-        czar.setAccountExpired(false);
-        czar.setCredentialsExpired(false);
-        czar.setRoles(List.of("ROLE_CZAR", "ROLE_USER"));
-
-        User admin = new User();
-        admin.setUsername("admin");
-        admin.setPassword(passwordEncoder.encode("admin"));
-        admin.setAccountLocked(false);
-        admin.setEnabled(true);
-        admin.setAccountExpired(false);
-        admin.setCredentialsExpired(false);
-        admin.setRoles(List.of("ROLE_ADMIN", "ROLE_USER"));
-
-        userRepository.saveAll(List.of(hlev, tumay, polya, czar, admin));
-    }
-
+    /**
+     * Sending an email when the server is running
+     */
     @EventListener(ApplicationReadyEvent.class)
     public void sendMail() {
         emailService.sendEmail(
@@ -124,6 +128,9 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
         );
     }
 
+    /**
+     * Specification of colors for console
+     */
     private static final String RESET_COLOR = "\u001B[0m";
     private static final String INFO_COLOR = "\u001B[32m";
     private static final String ERROR_COLOR = "\u001B[31m";
@@ -131,9 +138,13 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
     private static final String TRACE_COLOR = "\u001B[34m";
     private static final String DEBUG_COLOR = "\u001B[36m";
 
+
     @Autowired
     private LogService logService;
 
+    /**
+     * Scheduled task that writes logs to database every hour
+     */
     @Scheduled(fixedRate=60*1000)
     public void writeToConsole() {
         List<Log> logs = logService.getLogs();
@@ -159,6 +170,9 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
     }
 
 
+    /**
+     * Scheduled task that sends email to registered users to invite them to play with tha game/
+     */
     @Scheduled(fixedRate=24*60*1000)
     public void sendMailDaily() {
         List<User> users = userRepository.findAll();
@@ -166,11 +180,14 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
             emailService.sendEmail(
                     "heizerlevente97@gmail.com",
                     "Come play with your friends",
-                    "Hi Levi,\nCome play with your friends..."
+                    "Hi Levi,\nCome play with your friends. There many rooms waiting for you to start playing.\n\nCards Against Humanity Group"
             );
         }
     }
 
+    /**
+     * Scheduled task that sends and email for registered users about their statistics
+     */
     @Scheduled(fixedRate=7*24*60*1000)
     public void sendMailWeekly() {
         List<User> users = userRepository.findAll();
@@ -179,7 +196,13 @@ public class CardsAgainstHumanityApiApplication implements CommandLineRunner {
                 emailService.sendEmail(
                         user.getEmail(),
                         "Your weekly stats",
-                        "Hi buddy,"
+                        "Hi buddy,\n" + "Here are your profile's ststistics: \n" +
+                                String.format("\tPoints: %d\n", user.getPoint()) +
+                                String.format("\tGolds: %d\n", user.getGold()) +
+                                String.format("\tSilver: %d\n", user.getSilver()) +
+                                String.format("\tBronze: %d", user.getBronze()) +
+                                "Come play a game to keep up!\n" +
+                                "Cards Against Humanity Group"
                 );
             }
         }
