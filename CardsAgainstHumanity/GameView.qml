@@ -373,22 +373,18 @@ Item {
                     id: lvotecardsmodel
                     ListElement {
                         name: "Grey"
-                        colorCode: "grey"
                     }
 
                     ListElement {
                         name: "Red"
-                        colorCode: "red"
                     }
 
                     ListElement {
                         name: "Blue"
-                        colorCode: "blue"
                     }
 
                     ListElement {
                         name: "Green"
-                        colorCode: "green"
                     }
                 }
                 delegate: Item {
