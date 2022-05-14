@@ -53,6 +53,8 @@ Item {
 
         function onSuccessfullyJoinedRoom(roomname) {
             nc.getRoomData();
+            roompane.visible = true;
+            listplayersmodel.clear();
             lcurrentroom.text = roomname;
         }
 
@@ -199,11 +201,12 @@ Item {
     }
 
     Pane {
-        id: pane1
+        id: roompane
         x: 320
         y: 0
         width: 320
         height: 480
+        visible:false
 
         ScrollView {
             x: 20
@@ -321,6 +324,7 @@ Item {
                 bplus.visible = false;
                 bminus.visible = false;
                 bstartgame.visible = false;
+                roompane.visible = false;
             }
         }
 

@@ -6,7 +6,6 @@ import QtQuick.Controls.Windows 6.0
 import QtCharts 2.3
 
 Item {
-    //todo handle end game, make menu and draw
 
     width: 640
     height: 480
@@ -457,6 +456,7 @@ Item {
     Pane {
         id: endgamepane
         anchors.fill: parent
+        visible: false
 
         ChartView {
             id: gameendchart

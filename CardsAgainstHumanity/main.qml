@@ -5,6 +5,7 @@ import QtQuick.Layouts 6.0
 import QtQuick.Controls.Windows 6.0
 import QtQuick.Dialogs
 
+//Window responsible for loading different views of the app and also handling menus
 ApplicationWindow {
     width: 640
     height: 320
@@ -12,18 +13,22 @@ ApplicationWindow {
     title: qsTr("Cards Against Humanity")
     id: window
 
+    //Shows login view
     function showLoginView(){
         displayedview.source = "qrc:/LoginView.qml"
     }
 
+    //Shows register voiew
     function showRegisterView(){
         displayedview.source = "qrc:/RegisterView.qml"
     }
 
+    //Shows main menu view
     function showMainMenuView(){
         displayedview.source = "qrc:/MainMenuView.qml"
     }
 
+    //Shows game view
     function showGameView(){
         displayedview.source = "qrc:/GameView.qml"
     }
@@ -38,11 +43,13 @@ ApplicationWindow {
             window.height = height;
             window.width = width;
         }
-        source: "qrc:/GameView.qml"
+        source: "qrc:/LoginView.qml"
     }
 
+    //Handles for different view's signals to load the corresponding view
     Connections {
         target: displayedview.item
+
         function onShowLoginView(){
             showLoginView();
         }
@@ -62,7 +69,7 @@ ApplicationWindow {
             title: qsTr("File")
             Action{
                 text: qsTr("About")
-                //onTriggered: aboutdialog.open()
+                onTriggered: aboutdialog.open()
             }
             Action{
                 text: qsTr("Close")
@@ -71,10 +78,28 @@ ApplicationWindow {
         }
     }
 
-    /*MessageDialog{
+    Dialog{
         title: qsTr("Cards Against Humanity")
-        text: qsTr("Cards Against Humanity is a fill-in-the-blank party game that turns your awkward personality and lackluster social skills into hours of fun! Wow.")
+        width: 320
+        height: 120
+
+        Label{
+            anchors.fill: parent
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            text: qsTr("Cards Against Humanity is a fill-in-the-blank party game that turns your awkward personality and lackluster social skills into hours of fun! Wow.")
+            wrapMode: Text.WordWrap
+        }
+
+        Button{
+            width: 40
+            x: 270
+            y: 60
+            text: qsTr("OK")
+            onClicked: aboutdialog.close();
+        }
+
         id: aboutdialog
-    }*/
+    }
 
 }
