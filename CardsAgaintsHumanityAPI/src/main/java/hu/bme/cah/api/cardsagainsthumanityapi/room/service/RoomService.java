@@ -349,17 +349,15 @@ public class RoomService {
      * @param roomId roomId
      * @param userName userName
      */
-    public void sendInvite(String roomId, String userName)
-    {
+    public void sendInvite(String roomId, String userName) {
         log.trace("In RoomService sendInvite(roomId, userName) method");
         log.info("Getting user by Id");
         User user = userRepository.getById(userName);
         log.info("Sending email to user's email address");
-        emailService.sendEmail(user.getEmail(), "Invite", "You are invited to join the " + roomId + " room");
+        emailService.sendEmail(user.getEmail(), "Invite", "You are invited to join the room named: " + roomId + "\nCards Against Humanity Group");
     }
 
-    public List<Integer> getUserWhiteIds(Room room, String userName)
-    {
+    public List<Integer> getUserWhiteIds(Room room, String userName) {
         log.trace("In getUserWhiteIds");
         List<Integer> userWhiteCardIds = new ArrayList<Integer>();
         if (!room.getConnectedUsers().contains(userName)) {
@@ -380,8 +378,7 @@ public class RoomService {
         return userWhiteCardIds;
     }
 
-    public int getCurrentBlackId(Room room)
-    {
+    public int getCurrentBlackId(Room room) {
         log.trace("In BlackId method");
         return room.getBlackIds().get(room.getCurrentRound() - 1);
     }

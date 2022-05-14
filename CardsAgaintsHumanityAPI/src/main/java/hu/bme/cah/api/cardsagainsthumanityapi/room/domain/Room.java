@@ -56,7 +56,6 @@ public class Room {
     private List<Integer> whiteIds;
     private List<Integer> blackIds;
 
-    //private List<String> allowedUsers;
     /**
      * Users connecred to the room
      */
@@ -74,7 +73,6 @@ public class Room {
      * The current round's number
      */
     private int currentRound;
-    //private boolean privateRoom;
     /**
      * Represents if the game has started or not
      */
