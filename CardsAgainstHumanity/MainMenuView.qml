@@ -20,8 +20,7 @@ Item {
     Component.onCompleted: nc.getRoomList;
 
     function leaveroom(){
-        //Actions to do on leaving the room: hiding the pane, and disabling controls
-        nc.leaveRoom();
+        //Gui actions to do when the player leaves room. Either by voluntarily, or being kicked.
         lcurrentroom.text = "";
         polling.stop();
         listplayersmodel.clear();
@@ -50,7 +49,7 @@ Item {
         function onRoomDataReceived(players, czarname, rounds, isplayerczar, iskicked) {
 
             if(iskicked){ //leave the room if the player is kicked
-                nc.leaveroom();
+                root.leaveroom();
                 return;
             }
 
@@ -345,6 +344,7 @@ Item {
             text: qsTr("Leave Room")
             onClicked: {
                 nc.leaveroom();
+                root.leaveroom();
             }
         }
 
