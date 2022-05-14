@@ -1,6 +1,6 @@
 **Házi feladat**
 
-Csapatnév: Ariane5
+Csapatnév: Ariane 5
 
 Csapattagok Neptun kóddal:
 - Heizer Levente (IT9P0Z)
