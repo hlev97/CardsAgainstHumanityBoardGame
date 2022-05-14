@@ -64,18 +64,15 @@ public class RoomController {
 
     /**
      * Sending emails
-     * @param recipients recipients
+     * @param roomId roomId
+     * @param userName userName
      */
-    private void sendEmails(List<User> recipients) {
-        log.trace("In RoomController sendEmails(recipients) method");
+    @GetMapping("/{roomId}/invite/{userName}")
+    @Secured(User.ROLE_USER)
+    public void inviteUser(@PathVariable String roomId, @PathVariable String userName) {
+        log.trace("In RoomController inviteUser method");
         log.info("Send email to recipients");
-        for (User to : recipients) {
-            emailService.sendEmail(
-                    to.getEmail(),
-                    "test",
-                    "test"
-            );
-        }
+        roomService.sendInvite(roomId, userName);
     }
 
     /**
