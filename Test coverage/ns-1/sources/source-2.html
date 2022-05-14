@@ -1,0 +1,434 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <title>Coverage Report > WhiteController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/highlight-idea.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.pack.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">hu.bme.cah.api.cardsagainsthumanityapi.card.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: WhiteController (hu.bme.cah.api.cardsagainsthumanityapi.card.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WhiteController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.1%
+  </span>
+  <span class="absValue">
+    (154/190)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$5b5e0510</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$63cf3e8a</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$6a874a05</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$704a0293</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$704a0293$$FastClassBySpringCGLIB$$27d0bfca</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$a88b6076</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$a88b6076$$FastClassBySpringCGLIB$$e0d822e2</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$EnhancerBySpringCGLIB$$bef56764</td>
+  </tr>
+  <tr>
+    <td class="name">WhiteController$$FastClassBySpringCGLIB$$303c7f71</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    81.1%
+  </span>
+  <span class="absValue">
+    (154/190)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<div class="sourceCode" id="sourceCode"><i class="no-highlight">1</i>&nbsp;package hu.bme.cah.api.cardsagainsthumanityapi.card.controller;
+<i class="no-highlight">2</i>&nbsp;
+<i class="no-highlight">3</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
+<i class="no-highlight">4</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.card.service.WhiteService;
+<i class="no-highlight">5</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.log.domain.Log;
+<i class="no-highlight">6</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.log.domain.LogLevel;
+<i class="no-highlight">7</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.log.service.LogService;
+<i class="no-highlight">8</i>&nbsp;import hu.bme.cah.api.cardsagainsthumanityapi.user.domain.User;
+<i class="no-highlight">9</i>&nbsp;import lombok.extern.slf4j.Slf4j;
+<i class="no-highlight">10</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i class="no-highlight">11</i>&nbsp;import org.springframework.dao.NonTransientDataAccessException;
+<i class="no-highlight">12</i>&nbsp;import org.springframework.http.HttpStatus;
+<i class="no-highlight">13</i>&nbsp;import org.springframework.http.ResponseEntity;
+<i class="no-highlight">14</i>&nbsp;import org.springframework.security.access.annotation.Secured;
+<i class="no-highlight">15</i>&nbsp;import org.springframework.security.core.Authentication;
+<i class="no-highlight">16</i>&nbsp;import org.springframework.security.core.context.SecurityContextHolder;
+<i class="no-highlight">17</i>&nbsp;import org.springframework.web.bind.annotation.*;
+<i class="no-highlight">18</i>&nbsp;
+<i class="no-highlight">19</i>&nbsp;import java.time.LocalDateTime;
+<i class="no-highlight">20</i>&nbsp;import java.util.List;
+<i class="no-highlight">21</i>&nbsp;import java.util.Objects;
+<i class="no-highlight">22</i>&nbsp;
+<i class="no-highlight">23</i>&nbsp;/**
+<i class="no-highlight">24</i>&nbsp; * RestController to give access through {@link WhiteService} to {@link White} cards
+<i class="no-highlight">25</i>&nbsp; */
+<i class="no-highlight">26</i>&nbsp;@RestController
+<i class="no-highlight">27</i>&nbsp;@RequestMapping(&quot;/api/white&quot;)
+<b class="fc"><i class="no-highlight">28</i>&nbsp;@Slf4j</b>
+<b class="fc"><i class="no-highlight">29</i>&nbsp;public class WhiteController {</b>
+<i class="no-highlight">30</i>&nbsp;    /**
+<i class="no-highlight">31</i>&nbsp;     * Injection of {@link WhiteService}
+<i class="no-highlight">32</i>&nbsp;     */
+<i class="no-highlight">33</i>&nbsp;    @Autowired
+<i class="no-highlight">34</i>&nbsp;    private WhiteService whiteService;
+<i class="no-highlight">35</i>&nbsp;
+<i class="no-highlight">36</i>&nbsp;    @Autowired
+<i class="no-highlight">37</i>&nbsp;    private LogService logService;
+<i class="no-highlight">38</i>&nbsp;
+<i class="no-highlight">39</i>&nbsp;    /**
+<i class="no-highlight">40</i>&nbsp;     * Getting all {@link White} cards.
+<i class="no-highlight">41</i>&nbsp;     * The invoker must have at least ROLE_USER authority to be able give this request.
+<i class="no-highlight">42</i>&nbsp;     * @return {@link List&lt;White&gt;}
+<i class="no-highlight">43</i>&nbsp;     */
+<i class="no-highlight">44</i>&nbsp;    @GetMapping(&quot;/list&quot;)
+<i class="no-highlight">45</i>&nbsp;    @Secured(User.ROLE_USER)
+<i class="no-highlight">46</i>&nbsp;    public List&lt;White&gt; list() {
+<b class="fc"><i class="no-highlight">47</i>&nbsp;        String text = &quot;WhiteController list() method accessed&quot;;</b>
+<b class="fc"><i class="no-highlight">48</i>&nbsp;        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">49</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">50</i>&nbsp;        log.trace(text);</b>
+<b class="fc"><i class="no-highlight">51</i>&nbsp;        text = &quot;Getting all white cards from database...&quot;;</b>
+<b class="fc"><i class="no-highlight">52</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">53</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">54</i>&nbsp;        log.info(text);</b>
+<b class="fc"><i class="no-highlight">55</i>&nbsp;        return whiteService.list();</b>
+<i class="no-highlight">56</i>&nbsp;    }
+<i class="no-highlight">57</i>&nbsp;
+<i class="no-highlight">58</i>&nbsp;    /**
+<i class="no-highlight">59</i>&nbsp;     * Getting a {@link White} card with certain id. The invoker must have at least ROLE_USER authority to be able give this request.
+<i class="no-highlight">60</i>&nbsp;     * @param whiteId id
+<i class="no-highlight">61</i>&nbsp;     * @return {@link White}
+<i class="no-highlight">62</i>&nbsp;     */
+<i class="no-highlight">63</i>&nbsp;    @GetMapping(&quot;/{whiteId}&quot;)
+<i class="no-highlight">64</i>&nbsp;    @Secured(User.ROLE_USER)
+<i class="no-highlight">65</i>&nbsp;    public ResponseEntity&lt;White&gt; getByWhiteId(@PathVariable long whiteId) {
+<b class="fc"><i class="no-highlight">66</i>&nbsp;        String text = &quot;WhiteController getWhiteById(whiteId) method accessed&quot;;</b>
+<b class="fc"><i class="no-highlight">67</i>&nbsp;        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">68</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">69</i>&nbsp;        log.trace(text);</b>
+<b class="fc"><i class="no-highlight">70</i>&nbsp;        text = &quot;Getting white card by id&quot;;</b>
+<b class="fc"><i class="no-highlight">71</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">72</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">73</i>&nbsp;        log.info(text);</b>
+<b class="fc"><i class="no-highlight">74</i>&nbsp;        White white = whiteService.getByWhiteId(whiteId);</b>
+<b class="fc"><i class="no-highlight">75</i>&nbsp;        if (white == null) {</b>
+<b class="nc"><i class="no-highlight">76</i>&nbsp;            text = &quot;In if block: the card is null&quot;;</b>
+<b class="nc"><i class="no-highlight">77</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">78</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">79</i>&nbsp;            log.trace(text);</b>
+<b class="nc"><i class="no-highlight">80</i>&nbsp;            text = &quot;Card with the certain id was not found&quot;;</b>
+<b class="nc"><i class="no-highlight">81</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">82</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">83</i>&nbsp;            log.trace(&quot;In if block:&quot;);</b>
+<b class="nc"><i class="no-highlight">84</i>&nbsp;            text = &quot;Card with the certain id was not found&quot;;</b>
+<b class="nc"><i class="no-highlight">85</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">86</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">87</i>&nbsp;            log.error(text);</b>
+<b class="nc"><i class="no-highlight">88</i>&nbsp;            return ResponseEntity.notFound().build();</b>
+<i class="no-highlight">89</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">90</i>&nbsp;            text = &quot;In else block: the card is not null&quot;;</b>
+<b class="fc"><i class="no-highlight">91</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">92</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">93</i>&nbsp;            log.trace(text);</b>
+<b class="fc"><i class="no-highlight">94</i>&nbsp;            text = &quot;The card was found successfully&quot;;</b>
+<b class="fc"><i class="no-highlight">95</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">96</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">97</i>&nbsp;            log.info(text);</b>
+<b class="fc"><i class="no-highlight">98</i>&nbsp;            return ResponseEntity.ok(white);</b>
+<i class="no-highlight">99</i>&nbsp;        }
+<i class="no-highlight">100</i>&nbsp;    }
+<i class="no-highlight">101</i>&nbsp;
+<i class="no-highlight">102</i>&nbsp;    /**
+<i class="no-highlight">103</i>&nbsp;     * Adding a new card to the the database. The User must have at least ROLE_USER authority to be able to do this request.
+<i class="no-highlight">104</i>&nbsp;     * @param white white card for add
+<i class="no-highlight">105</i>&nbsp;     * @return {@link White}
+<i class="no-highlight">106</i>&nbsp;     */
+<i class="no-highlight">107</i>&nbsp;    @PostMapping
+<i class="no-highlight">108</i>&nbsp;    @Secured({User.ROLE_USER, User.ROLE_ADMIN})
+<i class="no-highlight">109</i>&nbsp;    public White create(@RequestBody White white) {
+<b class="fc"><i class="no-highlight">110</i>&nbsp;        String text = &quot;In WhiteController create(white) method&quot;;</b>
+<b class="fc"><i class="no-highlight">111</i>&nbsp;        Log loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">112</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">113</i>&nbsp;        log.trace(text);</b>
+<b class="fc"><i class="no-highlight">114</i>&nbsp;        text = &quot;Adding new white card...&quot;;</b>
+<b class="fc"><i class="no-highlight">115</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">116</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">117</i>&nbsp;        log.info(text);</b>
+<b class="fc"><i class="no-highlight">118</i>&nbsp;        white.setWhiteId(null);</b>
+<b class="fc"><i class="no-highlight">119</i>&nbsp;        return whiteService.save(white);</b>
+<i class="no-highlight">120</i>&nbsp;    }
+<i class="no-highlight">121</i>&nbsp;
+<i class="no-highlight">122</i>&nbsp;    /**
+<i class="no-highlight">123</i>&nbsp;     * Updating a card with given database and save changes. The User must have at least ROLE_USER authority to be able to do this request.
+<i class="no-highlight">124</i>&nbsp;     * @param whiteId id
+<i class="no-highlight">125</i>&nbsp;     * @param white white card for update
+<i class="no-highlight">126</i>&nbsp;     * @return {@link ResponseEntity&lt;White&gt;}
+<i class="no-highlight">127</i>&nbsp;     */
+<i class="no-highlight">128</i>&nbsp;    @PutMapping(&quot;/{whiteId}&quot;)
+<i class="no-highlight">129</i>&nbsp;    @Secured({User.ROLE_ADMIN, User.ROLE_USER})
+<i class="no-highlight">130</i>&nbsp;    public ResponseEntity&lt;White&gt; update(@PathVariable long whiteId, @RequestBody White white) {
+<b class="fc"><i class="no-highlight">131</i>&nbsp;        String text = &quot;Update method accessed.&quot;;</b>
+<b class="fc"><i class="no-highlight">132</i>&nbsp;        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">133</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">134</i>&nbsp;        log.trace(text);</b>
+<i class="no-highlight">135</i>&nbsp;
+<b class="fc"><i class="no-highlight">136</i>&nbsp;        text = &quot;Updating white card with certain id.&quot;;</b>
+<b class="fc"><i class="no-highlight">137</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">138</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">139</i>&nbsp;        log.info(text);</b>
+<i class="no-highlight">140</i>&nbsp;
+<b class="fc"><i class="no-highlight">141</i>&nbsp;        text = &quot;The invoker must have at least user role to do this operation&quot;;</b>
+<b class="fc"><i class="no-highlight">142</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">143</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">144</i>&nbsp;        log.warn(text);</b>
+<i class="no-highlight">145</i>&nbsp;
+<b class="fc"><i class="no-highlight">146</i>&nbsp;        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</b>
+<i class="no-highlight">147</i>&nbsp;        try {
+<b class="fc"><i class="no-highlight">148</i>&nbsp;            text = &quot;In try block: updateing room&quot;;</b>
+<b class="fc"><i class="no-highlight">149</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">150</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">151</i>&nbsp;            log.trace(text);</b>
+<b class="fc"><i class="no-highlight">152</i>&nbsp;            if (Objects.equals(whiteService.getByWhiteId(whiteId).getPack(), &quot;Base&quot;)) {</b>
+<b class="fc"><i class="no-highlight">153</i>&nbsp;                text = &quot;In if block: card is in the base set&quot;;</b>
+<b class="fc"><i class="no-highlight">154</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">155</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">156</i>&nbsp;                log.trace(text);</b>
+<b class="fc"><i class="no-highlight">157</i>&nbsp;                text = &quot;The invoker must be an admin to modify base cards&quot;;</b>
+<b class="fc"><i class="no-highlight">158</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">159</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">160</i>&nbsp;                log.warn(text);</b>
+<b class="fc"><i class="no-highlight">161</i>&nbsp;                if (auth.getAuthorities().stream().noneMatch(a -&gt; a.getAuthority().equals(User.ROLE_ADMIN))) {</b>
+<b class="fc"><i class="no-highlight">162</i>&nbsp;                    text = &quot;In if block: the invoker user is not an admin&quot;;</b>
+<b class="fc"><i class="no-highlight">163</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">164</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">165</i>&nbsp;                    log.trace(text);</b>
+<b class="fc"><i class="no-highlight">166</i>&nbsp;                    text = &quot;The user is not authenticated to do this operation&quot;;</b>
+<b class="fc"><i class="no-highlight">167</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">168</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">169</i>&nbsp;                    log.error(text);</b>
+<b class="fc"><i class="no-highlight">170</i>&nbsp;                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();</b>
+<i class="no-highlight">171</i>&nbsp;                } else {
+<b class="fc"><i class="no-highlight">172</i>&nbsp;                    text = &quot;In else block: the invoker user is an admin&quot;;</b>
+<b class="fc"><i class="no-highlight">173</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">174</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">175</i>&nbsp;                    log.trace(text);</b>
+<b class="fc"><i class="no-highlight">176</i>&nbsp;                    text = &quot;The invoker is able to do the modification&quot;;</b>
+<b class="fc"><i class="no-highlight">177</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">178</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">179</i>&nbsp;                    log.info(text);</b>
+<b class="fc"><i class="no-highlight">180</i>&nbsp;                    White result = whiteService.update(whiteId, white);</b>
+<b class="fc"><i class="no-highlight">181</i>&nbsp;                    return ResponseEntity.ok(result);</b>
+<i class="no-highlight">182</i>&nbsp;                }
+<i class="no-highlight">183</i>&nbsp;            } else {
+<b class="fc"><i class="no-highlight">184</i>&nbsp;                text = &quot;In else block: the card is not in the base set&quot;;</b>
+<b class="fc"><i class="no-highlight">185</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">186</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">187</i>&nbsp;                log.trace(text);</b>
+<b class="fc"><i class="no-highlight">188</i>&nbsp;                White result = whiteService.update(whiteId, white);</b>
+<b class="fc"><i class="no-highlight">189</i>&nbsp;                text = &quot;The invoker is able to do the modification&quot;;</b>
+<b class="fc"><i class="no-highlight">190</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">191</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">192</i>&nbsp;                log.info(text);</b>
+<b class="fc"><i class="no-highlight">193</i>&nbsp;                return ResponseEntity.ok(result);</b>
+<i class="no-highlight">194</i>&nbsp;            }
+<b class="fc"><i class="no-highlight">195</i>&nbsp;        } catch(NonTransientDataAccessException e) {</b>
+<b class="fc"><i class="no-highlight">196</i>&nbsp;            text = &quot;In catch block:&quot;;</b>
+<b class="fc"><i class="no-highlight">197</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">198</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">199</i>&nbsp;            log.trace(text);</b>
+<b class="fc"><i class="no-highlight">200</i>&nbsp;            text = &quot;The user is not authenticated to do this operation&quot;;</b>
+<b class="fc"><i class="no-highlight">201</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">202</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">203</i>&nbsp;            log.error(text);</b>
+<b class="fc"><i class="no-highlight">204</i>&nbsp;            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(white);</b>
+<i class="no-highlight">205</i>&nbsp;        }
+<i class="no-highlight">206</i>&nbsp;    }
+<i class="no-highlight">207</i>&nbsp;
+<i class="no-highlight">208</i>&nbsp;    /**
+<i class="no-highlight">209</i>&nbsp;     * Deleting a card with given id from database. The User must have at least ROLE_USER authority to be able to do this request.
+<i class="no-highlight">210</i>&nbsp;     * @param whiteId id
+<i class="no-highlight">211</i>&nbsp;     * @return {@link ResponseEntity&lt;&gt;}
+<i class="no-highlight">212</i>&nbsp;     */
+<i class="no-highlight">213</i>&nbsp;    @DeleteMapping(&quot;/{whiteId}&quot;)
+<i class="no-highlight">214</i>&nbsp;    @Secured({User.ROLE_ADMIN, User.ROLE_USER})
+<i class="no-highlight">215</i>&nbsp;    public ResponseEntity&lt;?&gt; delete(@PathVariable long whiteId) {
+<b class="fc"><i class="no-highlight">216</i>&nbsp;        String text = &quot;In WhiteController delete(whiteId) method&quot;;</b>
+<b class="fc"><i class="no-highlight">217</i>&nbsp;        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">218</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">219</i>&nbsp;        log.trace(text);</b>
+<i class="no-highlight">220</i>&nbsp;
+<b class="fc"><i class="no-highlight">221</i>&nbsp;        text = &quot;Deleting white card with given id...&quot;;</b>
+<b class="fc"><i class="no-highlight">222</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">223</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">224</i>&nbsp;        log.info(text);</b>
+<b class="fc"><i class="no-highlight">225</i>&nbsp;        text = &quot;The invoker must have at least user role to do this operation&quot;;</b>
+<b class="fc"><i class="no-highlight">226</i>&nbsp;        loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">227</i>&nbsp;        logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">228</i>&nbsp;        log.warn(text);</b>
+<b class="fc"><i class="no-highlight">229</i>&nbsp;        Authentication auth = SecurityContextHolder.getContext().getAuthentication();</b>
+<b class="fc"><i class="no-highlight">230</i>&nbsp;        White white = whiteService.getByWhiteId(whiteId);</b>
+<b class="fc"><i class="no-highlight">231</i>&nbsp;        if (white == null) {</b>
+<b class="nc"><i class="no-highlight">232</i>&nbsp;            text = &quot;In if block: card is null&quot;;</b>
+<b class="nc"><i class="no-highlight">233</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">234</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">235</i>&nbsp;            log.trace(text);</b>
+<b class="nc"><i class="no-highlight">236</i>&nbsp;            text = &quot;The card with the given id was not found&quot;;</b>
+<b class="nc"><i class="no-highlight">237</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">238</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">239</i>&nbsp;            log.error(text);</b>
+<b class="nc"><i class="no-highlight">240</i>&nbsp;            return ResponseEntity.notFound().build();</b>
+<i class="no-highlight">241</i>&nbsp;        } else {
+<b class="fc"><i class="no-highlight">242</i>&nbsp;            text = &quot;In else block: card is not null&quot;;</b>
+<b class="fc"><i class="no-highlight">243</i>&nbsp;            loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">244</i>&nbsp;            logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">245</i>&nbsp;            log.trace(text);</b>
+<b class="fc"><i class="no-highlight">246</i>&nbsp;            if (Objects.equals(whiteService.getByWhiteId(whiteId).getPack(), &quot;Base&quot;)) {</b>
+<b class="fc"><i class="no-highlight">247</i>&nbsp;                text = &quot;In if block: card is in base set&quot;;</b>
+<b class="fc"><i class="no-highlight">248</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">249</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">250</i>&nbsp;                log.trace(text);</b>
+<b class="fc"><i class="no-highlight">251</i>&nbsp;                text = &quot;The invoker must be an admin to delete base cards&quot;;</b>
+<b class="fc"><i class="no-highlight">252</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.WARN, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">253</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">254</i>&nbsp;                log.warn(text);</b>
+<b class="fc"><i class="no-highlight">255</i>&nbsp;                if (auth.getAuthorities().stream().noneMatch(a -&gt; a.getAuthority().equals(User.ROLE_ADMIN))) {</b>
+<b class="fc"><i class="no-highlight">256</i>&nbsp;                    text = &quot;In else block: The invoker user is not admin&quot;;</b>
+<b class="fc"><i class="no-highlight">257</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">258</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">259</i>&nbsp;                    log.trace(text);</b>
+<b class="fc"><i class="no-highlight">260</i>&nbsp;                    text = &quot;The user is not authenticated to delete this card&quot;;</b>
+<b class="fc"><i class="no-highlight">261</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.ERROR, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">262</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">263</i>&nbsp;                    log.error(text);</b>
+<b class="fc"><i class="no-highlight">264</i>&nbsp;                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();</b>
+<i class="no-highlight">265</i>&nbsp;                } else {
+<b class="nc"><i class="no-highlight">266</i>&nbsp;                    text = &quot;In else block: the invoker user is admin&quot;;</b>
+<b class="nc"><i class="no-highlight">267</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">268</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">269</i>&nbsp;                    log.trace(text);</b>
+<b class="nc"><i class="no-highlight">270</i>&nbsp;                    text = &quot;The invoker is able to delete this card&quot;;</b>
+<b class="nc"><i class="no-highlight">271</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">272</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">273</i>&nbsp;                    log.info(text);</b>
+<b class="nc"><i class="no-highlight">274</i>&nbsp;                    whiteService.delete(whiteId);</b>
+<b class="nc"><i class="no-highlight">275</i>&nbsp;                    text = &quot;The deletion was successful&quot;;</b>
+<b class="nc"><i class="no-highlight">276</i>&nbsp;                    loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="nc"><i class="no-highlight">277</i>&nbsp;                    logService.save(loggedEvent);</b>
+<b class="nc"><i class="no-highlight">278</i>&nbsp;                    log.info(text);</b>
+<b class="nc"><i class="no-highlight">279</i>&nbsp;                    return ResponseEntity.ok().build();</b>
+<i class="no-highlight">280</i>&nbsp;                }
+<i class="no-highlight">281</i>&nbsp;            } else {
+<b class="fc"><i class="no-highlight">282</i>&nbsp;                text = &quot;In else block: The card is not in base set&quot;;</b>
+<b class="fc"><i class="no-highlight">283</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">284</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">285</i>&nbsp;                log.trace(text);</b>
+<b class="fc"><i class="no-highlight">286</i>&nbsp;                whiteService.delete(whiteId);</b>
+<b class="fc"><i class="no-highlight">287</i>&nbsp;                text = &quot;The deletion was successful&quot;;</b>
+<b class="fc"><i class="no-highlight">288</i>&nbsp;                loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());</b>
+<b class="fc"><i class="no-highlight">289</i>&nbsp;                logService.save(loggedEvent);</b>
+<b class="fc"><i class="no-highlight">290</i>&nbsp;                log.info(text);</b>
+<b class="fc"><i class="no-highlight">291</i>&nbsp;                return ResponseEntity.ok().build();</b>
+<i class="no-highlight">292</i>&nbsp;            }
+<i class="no-highlight">293</i>&nbsp;        }
+<i class="no-highlight">294</i>&nbsp;    }
+<i class="no-highlight">295</i>&nbsp;}
+</div>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+        var codeBlock = document.getElementById('sourceCode');
+
+        if (codeBlock) {
+            hljs.highlightBlock(codeBlock);
+        }
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2022-05-14 13:28</div>
+</div>
+</body>
+</html>
