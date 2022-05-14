@@ -343,8 +343,7 @@ void NetworkController::sendPickedCards(QList<int> cards)
     obj["cards"] = jsonArray;
     QJsonDocument doc(obj);
     QByteArray body = doc.toJson();
-    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handleRoomListResult(QNetworkReply*)));
-
+    
     manager->put(request, body);
 }
 
