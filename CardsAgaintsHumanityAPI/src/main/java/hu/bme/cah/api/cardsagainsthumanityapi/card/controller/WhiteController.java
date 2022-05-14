@@ -44,9 +44,12 @@ public class WhiteController {
     @GetMapping("/list")
     @Secured(User.ROLE_USER)
     public List<White> list() {
-        log.trace("WhiteController list() method accessed");
-        String text = "Getting all white cards from database...";
-        Log loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
+        String text = "WhiteController list() method accessed";
+        Log loggedEvent = new Log(null, text, LogLevel.TRACE, LocalDateTime.now());
+        logService.save(loggedEvent);
+        log.trace(text);
+        text = "Getting all white cards from database...";
+        loggedEvent = new Log(null, text, LogLevel.INFO, LocalDateTime.now());
         logService.save(loggedEvent);
         log.info(text);
         return whiteService.list();
