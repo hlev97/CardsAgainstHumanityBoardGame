@@ -19,6 +19,24 @@ Item {
     //When loading the component we automatically refresh the list of rooms
     Component.onCompleted: nc.getRoomList;
 
+    function leaveroom(){
+        //Actions to do on leaving the room: hiding the pane, and disabling controls
+        nc.leaveRoom();
+        lcurrentroom.text = "";
+        polling.stop();
+        listplayersmodel.clear();
+        lrounds.text = "";
+
+        root.beenczar = false;
+        lroundtext.visible = false
+        lrounds.visible = false;
+        lrounds.text = 5;
+        bplus.visible = false;
+        bminus.visible = false;
+        bstartgame.visible = false;
+        roompane.visible = false;
+    }
+
     Connections{
         target: nc
 
@@ -29,7 +47,13 @@ Item {
         }
 
         //On receiving data for a room we joined to, load it into the corresponding view elements.
-        function onRoomDataReceived(players, czarname, rounds, isplayerczar) {
+        function onRoomDataReceived(players, czarname, rounds, isplayerczar, iskicked) {
+
+            if(iskicked){ //leave the room if the player is kicked
+                nc.leaveroom();
+                return;
+            }
+
             listplayersmodel.clear();
             players.forEach(item => listplayersmodel.append({name: item, isCzar: item === czarname, isplayerczar: isplayerczar}));
 
@@ -320,21 +344,7 @@ Item {
             width: 80
             text: qsTr("Leave Room")
             onClicked: {
-                //Actions to do on leaving the room: hiding the pane, and disabling controls
-                nc.leaveRoom();
-                lcurrentroom.text = "";
-                polling.stop();
-                listplayersmodel.clear();
-                lrounds.text = "";
-
-                root.beenczar = false;
-                lroundtext.visible = false
-                lrounds.visible = false;
-                lrounds.text = 5;
-                bplus.visible = false;
-                bminus.visible = false;
-                bstartgame.visible = false;
-                roompane.visible = false;
+                nc.leaveroom();
             }
         }
 
