@@ -1,5 +1,6 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.room.service;
 
+
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.repository.BlackRepository;
@@ -16,11 +17,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 
+import hu.bme.cah.api.cardsagainsthumanityapi.room.controller.RoomController;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Ensures that {@link RoomController} can access {@link Room} through {@link RoomRepository}
+ */
 @Slf4j
 @Service
 public class RoomService {
@@ -36,77 +41,149 @@ public class RoomService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Gets all room
+     * @return rooms
+     */
     public List<Room> list() {
         log.trace("In RoomService list() method");
         return roomRepository.list();
     }
 
+    /**
+     * Get room with given id
+     * @param roomId id
+     * @return room
+     */
     public Room getByRoomId(String roomId) {
         log.trace("In RoomService getByRoomId(roomId) method");
         return roomRepository.findByRoomId(roomId);
     }
 
+    /**
+     * Save room
+     * @param room room
+     * @return saved room
+     */
     public Room save(Room room) {
         log.trace("In RoomService save(room) method");
         return roomRepository.save(room);
     }
 
+    /**
+     * Save list of room
+     * @param rooms list og room
+     */
     public void save(List<Room> rooms) {
         log.trace("In RoomService save(rooms) method");
         roomRepository.save(rooms);
     }
 
+    /**
+     * Deletes room with given id
+     * @param roomId roomId of removable room
+     */
     public void removeByRoomId(String roomId) {
         log.trace("In RoomService removeByRoomId(roomId) method");
         roomRepository.removeByRoomId(roomId);
     }
 
+    /**
+     * Gets the size of the room's white card list
+     * @return whiteList size
+     */
     public int whitesSize() {
         log.trace("In RoomService whiteSize() method");
         return whiteRepository.findAll().size();
     }
 
+    /**
+     * Gets the size of the room's black card list
+     * @return blackList size
+     */
     public int blacksSize() {
         log.trace("In RoomService blackSize() method");
         return blackRepository.findAll().size();
     }
 
+    /**
+     * Get specific white card from room
+     * @param whiteId white card id
+     * @return white card
+     */
     public White getByWhiteId(int whiteId) {
         log.trace("In RoomService getByWhiteId(whiteId) method");
 
         return whiteRepository.findByWhiteId(whiteId);
     }
 
+    /**
+     * Get specific black card from room
+     * @param blackId black card id
+     * @return black card
+     */
     public Black getByBlackId(int blackId) {
         log.trace("In RoomService getByBlackId(blackId) method");
         return blackRepository.findByBlackId(blackId);
     }
 
+    /**
+     * Gets all white cards from room
+     * @return whiteList
+     */
     public List<White> listWhites() {
         log.trace("In RoomService listWhites method");
         return whiteRepository.findAll();
     }
 
-    public User getByUserId(List<String> id) {
+    /**
+     * Gets specific user from room
+     * @param id username
+     * @return user
+     */
+    public User getByUserId(String id) {
         log.trace("In RoomService getByUserId(id) method");
-        return userRepository.findAllById(id).get(0);
+        return userRepository.getById(id);
     }
 
+    /**
+     * Gets specific users from room
+     * @param userIds usernames
+     * @return users
+     */
     public List<User> findAllByUserIds(List<String> userIds) {
         log.trace("In RoomService findAllByUserIds(userIds) method");
         return userRepository.findAllById(userIds);
     }
 
+    /**
+     * Updates specific room's connected with user
+     * @param roomId roomId
+     * @param name username
+     * @return room
+     */
     public Room updateConnectedUsers(String roomId, String name) {
         log.trace("In RoomService updateConnectedUsers(roomId,name) method");
         return roomRepository.updateConnectedUsers(roomId, name);
     }
 
+    /**
+     * Removes a user from specific room's connected users
+     * @param roomId roomId
+     * @param name username
+     * @return User
+     */
     public Room deleteConnectedUsers(String roomId, String name) {
         log.trace("In RoomService deleteConnectedUsers(roomId,name) method");
         return roomRepository.deleteConnectedUsers(roomId, name);
     }
 
+    /**
+     * Creates room with czar
+     * @param room room
+     * @param czar czar's username
+     * @return room
+     */
     public Room createRoom(Room room, String czar) {
         log.trace("In RoomService createRoom(room,czar) method");
         room.setCzarId(czar);
@@ -124,6 +201,13 @@ public class RoomService {
         return savedRoom;
     }
 
+    //TODO: ezt szerintem at kene emelni userService-be
+    /**
+     * Updates user's role with czar role
+     * @param name
+     * @param roleCzar
+     * @return user
+     */
     public User updateUserRoleById(String name, String roleCzar) {
         log.trace("In RoomService updateUserRoleById(name, roleCzar) method");
         User user = userRepository.findAllById(List.of(name)).get(0);
@@ -139,6 +223,11 @@ public class RoomService {
         return updatedUser;
     }
 
+    /**
+     * Initialize game of a specific room
+     * @param roomId roomId
+     * @return room
+     */
     public Room initGame(String roomId) {
         log.trace("In RoomService initGame(roomId)");
         Room room = roomRepository.findByRoomId(roomId);
@@ -182,6 +271,12 @@ public class RoomService {
         return initGameRoom;
     }
 
+    /**
+     * Gets game state of a room
+     * @param room room
+     * @param name username
+     * @return game state
+     */
     public GameState getGameState(Room room, String name) {
         log.trace("In RoomService getGameState(room,name)");
         GameState gs = new GameState();
@@ -223,6 +318,10 @@ public class RoomService {
         return gs;
     }
 
+    /**
+     * Updates votes of room
+     * @param room room
+     */
     public void updateVotes(Room room) {
         log.trace("In RoomService updateVotes(room) method");
         Map<String, Integer> numberOfVotes = room.getUserScores();
@@ -235,5 +334,4 @@ public class RoomService {
         }
 
     }
-
 }
