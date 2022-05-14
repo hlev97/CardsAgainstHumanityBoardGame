@@ -87,7 +87,7 @@ public class CardsAgainstHumanityApiApplication {
             User polya = new User();
             polya.setUsername("polya");
             polya.setPassword(passwordEncoder.encode("polya"));
-            polya.setEmail("heizerlevente97@gmail.com");
+            polya.setEmail("p.matyi00@gmail.com");
             polya.setAccountLocked(false);
             polya.setEnabled(true);
             polya.setAccountExpired(false);
