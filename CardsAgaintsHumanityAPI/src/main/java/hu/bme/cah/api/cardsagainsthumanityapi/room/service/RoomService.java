@@ -1,10 +1,10 @@
 package hu.bme.cah.api.cardsagainsthumanityapi.room.service;
 
-
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.repository.BlackRepository;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.repository.WhiteRepository;
+import hu.bme.cah.api.cardsagainsthumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.GameState;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.repository.RoomRepository;
@@ -41,6 +41,9 @@ public class RoomService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    EmailService emailService;
+    
     /**
      * Gets all room
      * @return rooms
@@ -333,4 +336,19 @@ public class RoomService {
             numberOfVotes.put(userVotes.get(key), votes + 1);
         }
     }
+    
+    /**
+     * Sends email invite to a player
+     * @param roomId roomId
+     * @param userName userName
+     */
+    public void sendInvite(String roomId, String userName)
+    {
+        log.trace("In RoomService sendInvite(roomId, userName) method");
+        log.info("Getting user by Id");
+        User user = userRepository.getById(userName);
+        log.info("Sending email to user's email address");
+        emailService.sendEmail(user.getEmail(), "Invite", "You are invited to join the " + roomId + " room");
+    }
+    
 }
