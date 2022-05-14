@@ -35,6 +35,7 @@ Item {
                 votepane.visible = false;
                 pickpane.visible = true;
                 bSendPicks.enabled = false;
+                console.log("asd");
                 nc.getCards();
                 break;
             case "TURN_VOTING":
@@ -389,6 +390,7 @@ Item {
                             text: name
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
+                            wrapMode: Text.WordWrap
                         }
 
                         CheckBox {

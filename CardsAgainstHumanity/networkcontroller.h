@@ -61,6 +61,7 @@ public slots:
     void handleRoomDataResult(QNetworkReply *reply);
     void handleCardsResult(QNetworkReply *reply);
     void handleGamestateResult(QNetworkReply *reply);
+    void handlePicksResult(QNetworkReply *reply);
 
 
 

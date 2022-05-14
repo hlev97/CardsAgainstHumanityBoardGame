@@ -37,7 +37,7 @@ ApplicationWindow {
             window.height = height;
             window.width = width;
         }
-        source: "qrc:/MainMenuView.qml"
+        source: "qrc:/LoginView.qml"
     }
 
     Connections {

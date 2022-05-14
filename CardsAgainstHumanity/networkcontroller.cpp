@@ -325,7 +325,7 @@ void NetworkController::handleRoomListResult(QNetworkReply *reply)
 
 void NetworkController::sendPickedCards(QList<int> cards)
 {
-    QNetworkRequest request(QUrl("http://localhost:8080/api/room"));
+    QNetworkRequest request(QUrl("http://localhost:8080/api/room/" + joinedRoomId + "/chooseCards"));
     QString concatenated = loggedInUsername + ":" + loggedInPassword;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
     QString headerData = "Basic " + data;
@@ -343,12 +343,31 @@ void NetworkController::sendPickedCards(QList<int> cards)
     obj["cards"] = jsonArray;
     QJsonDocument doc(obj);
     QByteArray body = doc.toJson();
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handleRoomListResult(QNetworkReply*)));
+
     manager->put(request, body);
 }
 
 void NetworkController::sendVote(QString vote)
 {
+    QNetworkRequest request(QUrl("http://localhost:8080/api/room/" + joinedRoomId + "/voteCards"));
+    QString concatenated = loggedInUsername + ":" + loggedInPassword;
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
 
+    request.setRawHeader("Authorization", headerData.toLocal8Bit());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+
+    QJsonObject obj;
+    obj["user"] = vote;
+    QJsonDocument doc(obj);
+    QByteArray body = doc.toJson();
+    qDebug() << obj;
+
+    //QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handleGamestateResult(QNetworkReply*)));
+
+    manager->put(request, body);
 }
 
 void NetworkController::updateGameState()
@@ -377,12 +396,21 @@ void NetworkController::handleGamestateResult(QNetworkReply *reply)
     QString state = json["turnState"].toString();
     int round = json["currentRound"].toInt();
     int maxrounds = json["allRound"].toInt();
-//    qDebug() << state;
-//    qDebug() << round;
-//    qDebug() << maxrounds;
+    QList<QString> users;
+    QList<int> scores;
+
+    QJsonDocument doc(QJsonDocument::fromJson(response_data));
+    QJsonObject jsonScores = doc["scores"].toObject();
+    foreach(const QString& key, jsonScores.keys()) {
+        QJsonValue value = jsonScores.value(key);
+        //qDebug() << "Key = " << key;
+
+        users.append(key);
+        scores.append(value.toInt());
+    }
 
 
-    //emit gameState(state, round, maxrounds);
+    emit gameState(state, round, maxrounds, users, scores);
 }
 
 void NetworkController::getCards()
@@ -432,5 +460,41 @@ void NetworkController::handleCardsResult(QNetworkReply *reply)
 
 void NetworkController::getPicks()
 {
+    QString concatenated = loggedInUsername + ":" + loggedInPassword;
+    QByteArray data = concatenated.toLocal8Bit().toBase64();
+    QString headerData = "Basic " + data;
+    QNetworkRequest request(QUrl("http://localhost:8080/api/room/" + joinedRoomId + "/gameState"));
+    request.setRawHeader("Authorization", headerData.toLocal8Bit());
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handlePicksResult(QNetworkReply*)));
+    manager->get(request);
+}
+void NetworkController::handlePicksResult(QNetworkReply *reply)
+{
+    QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)), 0, 0);
+
+    QStringList picks;
+    QStringList users;
+    int numberOfPicks;
+
+    QByteArray response_data = reply->readAll();
+
+    QJsonDocument doc(QJsonDocument::fromJson(response_data));
+    QJsonObject json = doc["chosenCards"].toObject();
+    foreach(const QString& key, json.keys()) {
+        QJsonValue value = json.value(key);
+        //qDebug() << "Key = " << key;
+
+        users.append(key);
+        for(auto card: value.toArray())
+        {
+            picks.append(card.toObject()["text"].toString());
+        }
+    }
+
+    numberOfPicks = doc["black"].toObject()["pick"].toInt();
+
+
+    emit picksReceived(picks, users, numberOfPicks);
 
 }
+
