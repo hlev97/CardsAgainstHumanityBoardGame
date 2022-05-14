@@ -2,6 +2,7 @@ package hu.bme.cah.api.cardsagainsthumanityapi.room.controller;
 
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
+import hu.bme.cah.api.cardsagainsthumanityapi.card.service.BlackService;
 import hu.bme.cah.api.cardsagainsthumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.GameState;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room;
@@ -25,6 +26,9 @@ import java.util.Map;
 
 import static hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room.*;
 
+/**
+ * RestController to give access through {@link RoomService} to {@link Room} cards
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/room")
@@ -35,6 +39,11 @@ public class RoomController {
     @Autowired
     EmailService emailService;
 
+    /**
+     * Create new room
+     * @param room room
+     * @return room
+     */
     @PostMapping
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> create(@RequestBody Room room) {
@@ -54,6 +63,10 @@ public class RoomController {
         return ResponseEntity.ok(result);
     }
 
+    /**
+     * Sending emails
+     * @param recipients recipients
+     */
     private void sendEmails(List<User> recipients) {
         log.trace("In RoomController sendEmails(recipients) method");
         log.info("Send email to recipients");
@@ -66,6 +79,11 @@ public class RoomController {
         }
     }
 
+    /**
+     * Get room by given id
+     * @param roomId roomId
+     * @return room
+     */
     @GetMapping("/{roomId}")
     @Secured(User.ROLE_USER)
     public Room getByRoomId(@PathVariable String roomId) {
@@ -73,6 +91,10 @@ public class RoomController {
         return roomService.getByRoomId(roomId);
     }
 
+    /**
+     * Get all room
+     * @return rooms
+     */
     @GetMapping("/list")
     @Secured(User.ROLE_USER)
     public List<Room> list() {
@@ -80,6 +102,11 @@ public class RoomController {
         return roomService.list();
     }
 
+    /**
+     * Delete room with given id
+     * @param roomId id of removable room
+     * @return response
+     */
     @DeleteMapping("/{roomId}")
     @Secured({User.ROLE_CZAR, User.ROLE_ADMIN})
     public ResponseEntity<?> delete(@PathVariable String roomId) {
@@ -97,6 +124,11 @@ public class RoomController {
         }
     }
 
+    /**
+     * Join to a specific room
+     * @param roomId roomId
+     * @return response(room)
+     */
     @PutMapping("/{roomId}/join")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> joinRoom(@PathVariable String roomId) {
@@ -140,6 +172,12 @@ public class RoomController {
         }
     }
 
+    /**
+     * Leave specific room
+     * @param roomId roomId
+     * @return reponce room
+     */
+    //TODO: join-t le kene cserelne leave-re
     @DeleteMapping("/{roomId}/join")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> leaveRoom(@PathVariable String roomId) {
@@ -174,6 +212,12 @@ public class RoomController {
         }
     }
 
+    /**
+     * Kick player out from room
+     * @param roomId roomId
+     * @param playerName username
+     * @return response room
+     */
     @DeleteMapping("/{roomId}/kick/{playerName}")
     @Secured(User.ROLE_CZAR)
     public ResponseEntity<Room> kickPlayer(@PathVariable String roomId, @PathVariable String playerName) {
@@ -209,6 +253,11 @@ public class RoomController {
         }
     }
 
+    /**
+     * Getting white cards from a specific room
+     * @param roomId roomId
+     * @return whiteList
+     */
     @GetMapping("/{roomId}/whites/list")
     @Secured(User.ROLE_USER)
     public List<White> getWhiteCardsFromRoom(
@@ -225,6 +274,12 @@ public class RoomController {
         return whites;
     }
 
+    /**
+     * Get specific white card from a specific room
+     * @param roomId roomId
+     * @param id whiteId
+     * @return response white card
+     */
     @GetMapping("/{roomId}/whites/{id}")
     @Secured(User.ROLE_USER)
     public ResponseEntity<White> getWhiteCardFromRoomById(
@@ -246,6 +301,11 @@ public class RoomController {
         }
     }
 
+    /**
+     * Getting black cards from a specific room
+     * @param roomId roomId
+     * @return blackList
+     */
     @GetMapping("/{roomId}/blacks/list")
     @Secured(User.ROLE_USER)
     public List<Black> getBlackCardsFromRoom(
@@ -262,6 +322,12 @@ public class RoomController {
         return blacks;
     }
 
+    /**
+     * Get specific black card from a specific room
+     * @param roomId roomId
+     * @param id blackId
+     * @return response black card
+     */
     @GetMapping("/{roomId}/blacks/{id}")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Black> getBlackCardFromRoomById(
@@ -283,8 +349,11 @@ public class RoomController {
         }
     }
 
-
-
+    /**
+     * Get connected users from room
+     * @param roomId roomId
+     * @return users
+     */
     @GetMapping("/{roomId}/connected_users/list")
     @Secured({User.ROLE_USER})
     public List<User> getConnectedUsersFromRoom(
@@ -298,6 +367,12 @@ public class RoomController {
         return users;
     }
 
+    /**
+     * Initializes the game in a specific room
+     * @param roomId roomId
+     * @param room_body room
+     * @return room
+     */
     @PutMapping("/{roomId}/initGame")
     @Secured(User.ROLE_CZAR)
     public ResponseEntity<Room> initGame(@PathVariable String roomId, @RequestBody Room room_body) {
@@ -334,6 +409,11 @@ public class RoomController {
         }
     }
 
+    /**
+     * Get game state of a specific room
+     * @param roomId roomId
+     * @return response game state
+     */
     @GetMapping("/{roomId}/gameState")
     @Secured(User.ROLE_USER)
     public ResponseEntity<GameState> getGameState(@PathVariable String roomId) {
@@ -369,6 +449,12 @@ public class RoomController {
         }
     }
 
+    /**
+     * Update choose cards map in a specific room
+     * @param roomId roomId
+     * @param map choose map
+     * @return response room
+     */
     @PutMapping("/{roomId}/chooseCards")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> chooseCards(@PathVariable String roomId, @RequestBody Map<String, List<Integer>> map) {
@@ -441,7 +527,12 @@ public class RoomController {
         }
     }
 
-
+    /**
+     * Update vote map in specific room
+     * @param roomId roomId
+     * @param map vote map
+     * @return response room
+     */
     @PutMapping("/{roomId}/voteCards")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> voteCards(@PathVariable String roomId, @RequestBody Map<String, String> map) {
