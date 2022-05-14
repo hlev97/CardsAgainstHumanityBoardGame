@@ -45,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/","/main","users/*").permitAll()
+                .antMatchers("users/*").permitAll()
                 .antMatchers("/api/room/*").hasRole("USER")
                 .antMatchers("/api/white/*").hasRole("USER")
                 .antMatchers("/api/black/*").hasRole("USER")
