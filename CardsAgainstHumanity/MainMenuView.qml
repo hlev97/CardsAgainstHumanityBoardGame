@@ -311,6 +311,13 @@ Item {
                 polling.stop();
                 listplayersmodel.clear();
                 lrounds.text = "";
+
+                lroundtext.visible = false
+                lrounds.visible = false;
+                lrounds.text = 5;
+                bplus.visible = false;
+                bminus.visible = false;
+                bstartgame.visible = false;
             }
         }
 

@@ -130,8 +130,6 @@ void NetworkController::joinRoom(QString room)
 //    request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QJsonObject obj;
-
-
     QJsonDocument doc(obj);
     QByteArray body = doc.toJson();
 
@@ -160,6 +158,7 @@ void NetworkController::handleRoomJoinResult(QNetworkReply *reply)
 }
 void NetworkController::leaveRoom()
 {
+
     QNetworkRequest request(QUrl("http://localhost:8080/api/room/"+joinedRoomId+"/join"));
     QString concatenated = loggedInUsername + ":" + loggedInPassword;
     QByteArray data = concatenated.toLocal8Bit().toBase64();
@@ -167,25 +166,15 @@ void NetworkController::leaveRoom()
 
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    manager->deleteResource(request);
+    QJsonObject obj;
+    QJsonDocument doc(obj);
+    QByteArray body = doc.toJson();
+
+    manager->put(request,body);
     //qDebug() << body;
 }
 
-/*void NetworkController::handleRoomLeaveResult(QNetworkReply *reply)
-{
-    QObject::disconnect(manager, SIGNAL(finished(QNetworkReply*)), 0, 0);
-    if (reply->error()) {
-        qDebug() << reply->errorString();
-        return;
-    }
 
-    QByteArray response_data = reply->readAll();
-    QJsonDocument json = QJsonDocument::fromJson(response_data);
-    QString roomId = QString::number(json["roomId"].toDouble());
-    qDebug() << "left room: " << roomId;
-    joinedRoomId = "";
-
-}*/
 
 void NetworkController::startGame(int rounds)
 {
@@ -199,8 +188,6 @@ void NetworkController::startGame(int rounds)
 
         QJsonObject obj;
         obj["rounds"] = rounds;
-
-
         QJsonDocument doc(obj);
         QByteArray body = doc.toJson();
 
@@ -230,7 +217,11 @@ void NetworkController::kickPlayer(QString name)
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
 
     QObject::connect(manager, SIGNAL(finished(QNetworkReply*)), this, SLOT(handlePlayerKickResult(QNetworkReply*)));
-    manager->deleteResource(request);
+
+    QJsonObject obj;
+    QJsonDocument doc(obj);
+    QByteArray body = doc.toJson();
+    manager->put(request,body);
     //qDebug() << body;
 }
 
