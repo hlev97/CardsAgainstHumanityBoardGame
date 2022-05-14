@@ -1,5 +1,8 @@
-import QtQuick 2.0
+import QtQuick 2.15
+import QtQuick.Window 2.15
 import QtQuick.Controls 6.2
+import QtQuick.Layouts 6.0
+import QtQuick.Controls.Windows 6.0
 
 Item {
     width: 360

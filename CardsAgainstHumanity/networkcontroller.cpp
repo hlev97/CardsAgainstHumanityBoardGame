@@ -6,6 +6,10 @@ NetworkController::NetworkController(QObject *parent)
     manager = new QNetworkAccessManager(this);
 }
 
+NetworkController::~NetworkController(){
+    delete manager;
+}
+
 void NetworkController::login(QString uname, QString pw)
 {
     loggedInUsername = uname;

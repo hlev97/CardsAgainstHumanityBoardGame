@@ -13,6 +13,7 @@ class NetworkController : public QObject
     Q_OBJECT
 public:
     explicit NetworkController(QObject *parent = nullptr);
+    ~NetworkController();
 
 
 private:

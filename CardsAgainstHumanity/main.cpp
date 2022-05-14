@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
-    NetworkController nc = NetworkController();
+    NetworkController nc;
     engine.rootContext()->setContextProperty("nc", &nc);
 
     engine.load(url);
