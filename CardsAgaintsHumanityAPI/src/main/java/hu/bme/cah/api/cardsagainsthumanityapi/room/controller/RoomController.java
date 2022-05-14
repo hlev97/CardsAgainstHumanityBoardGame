@@ -172,8 +172,7 @@ public class RoomController {
      * @param roomId roomId
      * @return reponce room
      */
-    //TODO: join-t le kene cserelne leave-re
-    @DeleteMapping("/{roomId}/join")
+    @PutMapping("/{roomId}/leave")
     @Secured(User.ROLE_USER)
     public ResponseEntity<Room> leaveRoom(@PathVariable String roomId) {
         log.trace("In RoomController leaveRoom(roomId) method");
@@ -213,7 +212,7 @@ public class RoomController {
      * @param playerName username
      * @return response room
      */
-    @DeleteMapping("/{roomId}/kick/{playerName}")
+    @PutMapping("/{roomId}/kick/{playerName}")
     @Secured(User.ROLE_CZAR)
     public ResponseEntity<Room> kickPlayer(@PathVariable String roomId, @PathVariable String playerName) {
         log.trace("In RoomController kickPlayer(roomId,playerName)");

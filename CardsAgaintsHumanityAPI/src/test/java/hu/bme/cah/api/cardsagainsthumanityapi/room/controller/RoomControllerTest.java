@@ -12,7 +12,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -61,7 +60,7 @@ public class RoomControllerTest {
                         .with(user("polya").password("polya").roles("USER"))
                         .contentType(MediaType.APPLICATION_JSON));
         String result = "{\"roomId\":\"roomName3\",\"whiteIds\":[],\"blackIds\":[],\"connectedUsers\":[\"hlev\"],\"czarId\":\"hlev\",\"rounds\":0,\"currentRound\":0,\"startedRoom\":false,\"turnState\":null,\"userScores\":{},\"userVotes\":{},\"userChosen\":{}}";
-        mvc.perform(delete("http://localhost:" + "8080" + "/api/room/roomName3/join")
+        mvc.perform(put("http://localhost:" + "8080" + "/api/room/roomName3/leave")
                 .with(user("polya").password("polya").roles("USER"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\n" +
@@ -86,7 +85,7 @@ public class RoomControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         String result = "{\"roomId\":\"roomName4\",\"whiteIds\":[],\"blackIds\":[],\"connectedUsers\":[\"hlev\"],\"czarId\":\"hlev\",\"rounds\":0,\"currentRound\":0,\"startedRoom\":false,\"turnState\":null,\"userScores\":{},\"userVotes\":{},\"userChosen\":{}}";
-        mvc.perform(delete("http://localhost:" + "8080" + "/api/room/roomName4/kick/polya")
+        mvc.perform(put("http://localhost:" + "8080" + "/api/room/roomName4/kick/polya")
                         .with(user("hlev").password("hlev").roles("USER", "CZAR"))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(result));
