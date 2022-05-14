@@ -29,7 +29,7 @@ signals:
     void successfullyRegistered();      //signals successfull registration at the LoginView
     void successfullyJoinedRoom(QString name);      //signals successfull room join at the MainMenuView
     void roomListReceived(QStringList);             //signals that the list of rooms is received at the MainMenuView
-    void roomDataReceived(QStringList players, QString czarname, int rounds, bool isplayerczar);        //signals that the room's data is received at the MainMenuView
+    void roomDataReceived(QStringList players, QString czarname, int rounds, bool isplayerczar, bool isPlayerKicked);        //signals that the room's data is received at the MainMenuView
     void gameStarted();         //signals that the game has started at the MainMenuView
     void gameState(QString state, int round, int maxrounds, QStringList users, QList<int> scores);      //signals that the gameState is received at the GameView
     void cardsReceived(QString blackCard, QStringList cards, QList<int> cardIds, int picks);        //signals that the cards in our hands are received at the GameView

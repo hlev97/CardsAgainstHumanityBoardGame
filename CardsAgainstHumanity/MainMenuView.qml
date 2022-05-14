@@ -17,7 +17,7 @@ Item {
     id: root
 
     //When loading the component we automatically refresh the list of rooms
-    Component.onCompleted: nc.getRoomList;
+    Component.onCompleted: nc.getRoomList();
 
     function leaveroom(){
         //Gui actions to do when the player leaves room. Either by voluntarily, or being kicked.
@@ -343,7 +343,7 @@ Item {
             width: 80
             text: qsTr("Leave Room")
             onClicked: {
-                nc.leaveroom();
+                nc.leaveRoom();
                 root.leaveroom();
             }
         }

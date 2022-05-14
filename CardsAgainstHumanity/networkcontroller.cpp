@@ -184,7 +184,7 @@ void NetworkController::handleRoomJoinResult(QNetworkReply *reply)
 */
 void NetworkController::leaveRoom()
 {
-    QNetworkRequest request(QUrl("http://localhost:8080/api/room/"+joinedRoomId+"/join"));
+    QNetworkRequest request(QUrl("http://localhost:8080/api/room/"+joinedRoomId+"/leave"));
     QString headerData = getHeaderData(loggedInUsername, loggedInPassword);
 
     request.setRawHeader("Authorization", headerData.toLocal8Bit());
@@ -295,6 +295,7 @@ void NetworkController::handleRoomDataResult(QNetworkReply *reply)
     QString czarName;
     int rounds;
     bool started;
+    bool isPlayerConnected = false;
 
     if (reply->error()) {
         qDebug() << reply->errorString();
@@ -308,12 +309,15 @@ void NetworkController::handleRoomDataResult(QNetworkReply *reply)
     QJsonArray jsonArray = json["connectedUsers"].toArray();
     for (auto v : jsonArray) {
         playerList.append(v.toString());
+        if (v.toString() == loggedInUsername)
+            isPlayerConnected = true;
+
         //qDebug() << v.toString();
     }
 
 
     started = json["startedRoom"].toBool();
-    if (started){
+    if (started && isPlayerConnected){
         emit gameStarted();
         return;
     }
@@ -324,7 +328,7 @@ void NetworkController::handleRoomDataResult(QNetworkReply *reply)
     rounds = json["rounds"].toInt();
     //qDebug() << "registered and logged in as: " << loggedInUsername;
     bool isCzar = QString::compare(czarName, loggedInUsername) == 0;
-    emit roomDataReceived(playerList, czarName, rounds, isCzar);
+    emit roomDataReceived(playerList, czarName, rounds, isCzar, !isPlayerConnected);
 }
 
 /**
