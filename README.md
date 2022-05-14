@@ -7,7 +7,7 @@ Csapattagok Neptun kóddal:
 - Tumay Ádám (Z7MTDT)
 - Pólya Mátyás Dániel (BBAGDV)
 
-Bemutató videó URL: 
+Bemutató videó URL: https://youtu.be/Yz08U7lPtZE
 (Ugye minden olyan dolog szerepel benne a kiírásnak megfelelően, amire pontot szeretnétek kapni?)
 
 **Pontot érő technológiák**
