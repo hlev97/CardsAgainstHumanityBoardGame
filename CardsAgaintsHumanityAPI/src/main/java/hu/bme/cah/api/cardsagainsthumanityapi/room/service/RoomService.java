@@ -210,7 +210,7 @@ public class RoomService {
      */
     public User updateUserRoleById(String name, String roleCzar) {
         log.trace("In RoomService updateUserRoleById(name, roleCzar) method");
-        User user = userRepository.findAllById(List.of(name)).get(0);
+        User user = userRepository.getById(name);
         log.info("User is found");
         user.getRoles().add(roleCzar);
         log.info("Czar role is added to user authorities");
@@ -332,6 +332,5 @@ public class RoomService {
             int votes = numberOfVotes.getOrDefault(userVotes.get(key), 0);
             numberOfVotes.put(userVotes.get(key), votes + 1);
         }
-
     }
 }

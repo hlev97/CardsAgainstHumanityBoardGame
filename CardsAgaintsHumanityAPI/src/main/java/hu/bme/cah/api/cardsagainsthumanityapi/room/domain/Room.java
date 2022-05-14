@@ -146,19 +146,6 @@ public class Room {
         this.blackIds = blackIds;
     }
 
-//    @ElementCollection
-//    @CollectionTable(
-//            name = "allowedUsers",
-//            joinColumns=@JoinColumn(name="roomId")
-//    )
-//    public List<String> getAllowedUsers() {
-//        return allowedUsers;
-//    }
-//
-//    public void setAllowedUsers(List<String> userIds) {
-//        this.allowedUsers = userIds;
-//    }
-
     public String getCzarId() {
         log.trace("In getCzarId getter method");
         return czarId;
@@ -232,27 +219,6 @@ public class Room {
         log.trace("In setUserVotes setter method");
         this.userVotes = userVotes;
     }
-
-
-//    public Map<String, List<White>> getUserWhiteCards() {
-//        return userWhiteCards;
-//    }
-//    List<Integer> getWhiteCardsByUser(String userName)
-//    {
-//        return userWhiteCardIds.get(userName);
-//    }
-//
-//    public void setUserWhiteCardIds(Map<String, List<Integer>> userWhiteCards) {
-//        this.userWhiteCardIds = userWhiteCards;
-//    }
-
-//    public boolean isPrivateRoom() {
-//        return privateRoom;
-//    }
-//
-//    public void setPrivateRoom(boolean privateRoom) {
-//        this.privateRoom = privateRoom;
-//    }
 
     public boolean getStartedRoom() {
         log.trace("In getStartedRoom getter method");

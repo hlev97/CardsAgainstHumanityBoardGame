@@ -140,7 +140,6 @@ public class RoomController {
             String name = auth.getName();
             try {
                 log.trace("In try block: add user");
-                //if (room.getAllowedUsers().contains(name)) {
                 log.info("Check if user is already in room");
                 if (room.getConnectedUsers().contains(name)){
                     log.trace("In if block: user is already in room");

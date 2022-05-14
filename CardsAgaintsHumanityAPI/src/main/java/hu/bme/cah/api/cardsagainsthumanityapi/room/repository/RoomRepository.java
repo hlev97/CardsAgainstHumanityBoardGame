@@ -111,16 +111,6 @@ public class RoomRepository {
         }
     }
 
-//    @Transactional
-//    public Room updateUsers(long roomId, Room room) {
-//        Room result = findByRoomId(roomId);
-//        if (result == null) throw new EntityNotFoundException();
-//        else {
-//            result.setAllowedUsers(room.getAllowedUsers());
-//            return em.merge(result);
-//        }
-//    }
-
     /**
      *  Updates room with given id with a new user
      * @param roomId updatable roomId
