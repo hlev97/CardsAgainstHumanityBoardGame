@@ -2,7 +2,6 @@ package hu.bme.cah.api.cardsagainsthumanityapi.room.controller;
 
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.Black;
 import hu.bme.cah.api.cardsagainsthumanityapi.card.domain.White;
-import hu.bme.cah.api.cardsagainsthumanityapi.card.service.BlackService;
 import hu.bme.cah.api.cardsagainsthumanityapi.email.service.EmailService;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.GameState;
 import hu.bme.cah.api.cardsagainsthumanityapi.room.domain.Room;
