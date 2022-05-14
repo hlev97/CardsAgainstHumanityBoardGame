@@ -16,12 +16,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "czar",
+									"value": "hlev",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "czar",
+									"value": "hlev",
 									"type": "string"
 								}
 							]
@@ -30,7 +30,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"allowedUsers\" : [\"katinka\", \"bela\", \"bese\", \"hlev\"],\n    \"rounds\" : 15\n}",
+							"raw": "{\n    \"roomId\": \"test_room\",\n    \"allowedUsers\" : [\"tumay\", \"polya\"],\n    \"rounds\" : 15\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -59,12 +59,12 @@
 							"basic": [
 								{
 									"key": "password",
-									"value": "hlev",
+									"value": "polya",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "hlev",
+									"value": "polya",
 									"type": "string"
 								}
 							]
@@ -81,7 +81,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/room/1/join",
+							"raw": "localhost:8080/api/room/test_room/join",
 							"host": [
 								"localhost"
 							],
@@ -89,7 +89,7 @@
 							"path": [
 								"api",
 								"room",
-								"1",
+								"test_room",
 								"join"
 							]
 						}
@@ -97,64 +97,27 @@
 					"response": []
 				},
 				{
-					"name": "room white card list",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/api/room/1/whites/list",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"room",
-								"1",
-								"whites",
-								"list"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "room allowed users list",
+					"name": "leave room",
 					"request": {
 						"auth": {
 							"type": "basic",
 							"basic": [
 								{
 									"key": "password",
-									"value": "hlev",
+									"value": "polya",
 									"type": "string"
 								},
 								{
 									"key": "username",
-									"value": "hlev",
+									"value": "polya",
 									"type": "string"
 								}
 							]
 						},
-						"method": "GET",
+						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1/allowed_users/list",
+							"raw": "localhost:8080/api/room/test_room/leave",
 							"host": [
 								"localhost"
 							],
@@ -162,46 +125,8 @@
 							"path": [
 								"api",
 								"room",
-								"1",
-								"allowed_users",
-								"list"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "room connected user list",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "hlev",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "hlev",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/api/room/1/connected_users/list",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"room",
-								"1",
-								"connected_users",
-								"list"
+								"test_room",
+								"leave"
 							]
 						}
 					},
@@ -255,6 +180,137 @@
 					"response": []
 				},
 				{
+					"name": "room init game",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rounds\" : 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/initGame",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"initGame"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "room white card list",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "polya",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "polya",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/whites/list",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"whites",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "room connected user list",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/connected_users/list",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"connected_users",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "room get a black card from black cards",
 					"request": {
 						"auth": {
@@ -275,7 +331,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1/blacks/1",
+							"raw": "localhost:8080/api/room/test_room/blacks/1",
 							"host": [
 								"localhost"
 							],
@@ -283,7 +339,7 @@
 							"path": [
 								"api",
 								"room",
-								"1",
+								"test_room",
 								"blacks",
 								"1"
 							]
@@ -297,7 +353,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1/whites/1",
+							"raw": "localhost:8080/api/room/test_room/whites/1",
 							"host": [
 								"localhost"
 							],
@@ -305,7 +361,7 @@
 							"path": [
 								"api",
 								"room",
-								"1",
+								"test_room",
 								"whites",
 								"1"
 							]
@@ -316,10 +372,25 @@
 				{
 					"name": "room black card list",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1/blacks/list",
+							"raw": "localhost:8080/api/room/test_room/blacks/list",
 							"host": [
 								"localhost"
 							],
@@ -327,7 +398,7 @@
 							"path": [
 								"api",
 								"room",
-								"1",
+								"test_room",
 								"blacks",
 								"list"
 							]
@@ -356,7 +427,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1",
+							"raw": "localhost:8080/api/room/test_room",
 							"host": [
 								"localhost"
 							],
@@ -364,7 +435,191 @@
 							"path": [
 								"api",
 								"room",
-								"1"
+								"test_room"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "kick player",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/kick/polya",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"kick",
+								"polya"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "room game state",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/gameState",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"gameState"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "room chose cards",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cards\": [\r\n        5\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/chooseCards",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"chooseCards"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "room vote card",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/api/test_room/voteCards",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"test_room",
+								"voteCards"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "invite user",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "hlev",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "hlev",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/api/room/test_room/invite/tumay",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"room",
+								"test_room",
+								"invite",
+								"tumay"
 							]
 						}
 					},
@@ -376,7 +631,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/room/1",
+							"raw": "localhost:8080/api/room/test_room",
 							"host": [
 								"localhost"
 							],
@@ -384,7 +639,7 @@
 							"path": [
 								"api",
 								"room",
-								"1"
+								"test_room"
 							]
 						}
 					},
@@ -433,10 +688,25 @@
 				{
 					"name": "white show specific card",
 					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "string"
+								}
+							]
+						},
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/api/white/1276",
+							"raw": "localhost:8080/api/white/1275",
 							"host": [
 								"localhost"
 							],
@@ -444,7 +714,7 @@
 							"path": [
 								"api",
 								"white",
-								"1276"
+								"1275"
 							]
 						}
 					},
@@ -767,105 +1037,6 @@
 			"name": "users",
 			"item": [
 				{
-					"name": "users me",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "czar",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "czar",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/me",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"me"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "users hello",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "czar",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "czar",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/hello",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"hello"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "users hello czar",
-					"request": {
-						"auth": {
-							"type": "basic",
-							"basic": [
-								{
-									"key": "password",
-									"value": "czar",
-									"type": "string"
-								},
-								{
-									"key": "username",
-									"value": "czar",
-									"type": "string"
-								}
-							]
-						},
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "localhost:8080/czar_hello",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"czar_hello"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "users all",
 					"request": {
 						"auth": {
@@ -886,14 +1057,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/users/",
+							"raw": "localhost:8080/users/list",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"users",
-								""
+								"list"
 							]
 						}
 					},
@@ -920,14 +1091,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/users/",
+							"raw": "localhost:8080/users/hlev",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
 								"users",
-								""
+								"hlev"
 							]
 						}
 					},
@@ -992,6 +1163,14 @@
 								"test"
 							]
 						}
+					},
+					"response": []
+				},
+				{
+					"name": "users me",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
